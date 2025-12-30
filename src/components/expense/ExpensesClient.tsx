@@ -26,6 +26,7 @@ interface ExpensesClientProps {
 
 export default function ExpensesClient({ initialExpenses, initialExpenseCategories, initialTotalCount, reports }: ExpensesClientProps) {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses)
+  const [totalCount, setTotalCount] = useState<number>(initialTotalCount || 0)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -34,10 +35,10 @@ export default function ExpensesClient({ initialExpenses, initialExpenseCategori
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   // Pagination State (TanStack Table formatı)
-    const [pagination, setPagination] = useState<PaginationState>({
-      pageIndex: 0, // 0. sayfa = Backend için 1. sayfa
-      pageSize: 5,
-    })
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0, // 0. sayfa = Backend için 1. sayfa
+    pageSize: 5,
+  })
     
 
 
@@ -60,6 +61,7 @@ export default function ExpensesClient({ initialExpenses, initialExpenseCategori
 
       if (res.status === 200 && res.data.isSuccess && res.data.resultObject) {
         setExpenses(res.data.resultObject.searchResult)
+        setTotalCount(res.data.resultObject.totalItemCount)
       }
     } catch (error) {
       console.error('Giderler yüklenemedi:', error)
@@ -95,11 +97,12 @@ export default function ExpensesClient({ initialExpenses, initialExpenseCategori
 
       if (selectedExpense) {
         // Güncelleme
-        const res = await ExpenseService.updateExpense(selectedExpense.id, {
+        const updatedExpense = {
           ...expenseData,
           id: selectedExpense.id,
           expenseCategory: expenseCategoryName,
-        } as Expense)
+        }
+        const res = await ExpenseService.createOrEditExpense(updatedExpense as Expense)
         if (res.status === 200 && res.data.isSuccess) {
           // Serverdan güncel verileri çek
           await fetchExpenses()
@@ -200,8 +203,8 @@ export default function ExpensesClient({ initialExpenses, initialExpenseCategori
           handleEdit={handleEdit}
           setExpenseToDelete={setExpenseToDelete}
           setDeleteDialogOpen={setDeleteDialogOpen}
-           // Pagination Props
-          totalCount={initialTotalCount || 0}
+          // Pagination Props
+          totalCount={totalCount}
           pagination={pagination}
           onPaginationChange={setPagination}
         />

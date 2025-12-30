@@ -58,15 +58,19 @@ export default function BankStatementUpload({ onProcessSuccess }: BankStatementU
     if (!file) return
     setIsUploading(true)
     setErrorMsg(null)
-
+    debugger
     try {
       const res = await BankService.uploadExcel(file)
-      // Backend direkt liste dönüyorsa:
-      if (res.data && Array.isArray(res.data)) {
-        setTransactions(res.data)
-        setStep('preview') // Tablo moduna geç
+      // Backend ServiceResult formatında dönüyor
+      if (res.status === 200 ) {
+        if (Array.isArray(res.data)) {
+          setTransactions(res.data)
+          setStep('preview') // Tablo moduna geç
+        } else {
+          setErrorMsg('Beklenmeyen veri formatı.')
+        }
       } else {
-        setErrorMsg('Beklenmeyen veri formatı.')
+        setErrorMsg(res.statusText || 'Dosya okunurken hata oluştu.')
       }
     } catch (err: any) {
       setErrorMsg(err.response?.data?.message || 'Dosya okunurken hata oluştu.')

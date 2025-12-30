@@ -36,25 +36,21 @@ const ExpenseTable: React.FC<ExpenseTableProps> = ({
 }) => {
   // Toplam Sayfa Sayısı Hesabı
   const pageCount = Math.ceil(totalCount / pagination.pageSize);
+  
   return (
     <div>
-      {data.length === 0 ? (
+      {/* Veri Yoksa ve Arama/Filtre Yoksa Boş State Göster */}
+      {data.length === 0 && !searchQuery && !selectedCategory ? (
         <Card>
           <CardContent className="pt-6">
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <TrendingDown className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-semibold mb-2">Gider bulunamadı</h3>
-              <p className="text-muted-foreground mb-4">
-                {searchQuery || selectedCategory
-                  ? "Arama kriterlerinize uygun gider bulunamadı."
-                  : "Henüz gider kaydı yok."}
-              </p>
-              {!searchQuery && !selectedCategory && (
-                <Button onClick={handleAdd} variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  İlk Gideri Ekle
-                </Button>
-              )}
+              <p className="text-muted-foreground mb-4">Henüz gider kaydı yok.</p>
+              <Button onClick={handleAdd} variant="outline">
+                <Plus className="h-4 w-4 mr-2" />
+                İlk Gideri Ekle
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -69,12 +65,12 @@ const ExpenseTable: React.FC<ExpenseTableProps> = ({
             onPaginationChange={onPaginationChange}
             actionsHeader="Aksiyonlar"
             renderActions={(expense) => (
-              <>
+              <div className="flex justify-end gap-2">
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => handleEdit(expense)}
-                  className="h-9 w-9"
+                  className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>
@@ -85,11 +81,11 @@ const ExpenseTable: React.FC<ExpenseTableProps> = ({
                     setExpenseToDelete(expense);
                     setDeleteDialogOpen(true);
                   }}
-                  className="h-9 w-9 text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
-              </>
+              </div>
             )}
           />
         </div>

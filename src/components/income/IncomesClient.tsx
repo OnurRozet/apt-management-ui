@@ -120,7 +120,13 @@ export default function IncomesClient({
 
         let res;
         if (selectedIncome) {
-            res = await IncomeService.updateIncome(selectedIncome.id, { ...payload, id: selectedIncome.id })
+           const updatedIncome = {
+          ...incomeData,
+          id: selectedIncome.id,
+          incomeCategory: category?.name || 'Unknown',
+          apartmentNo: apartment?.label
+        }
+            res = await IncomeService.createOrEditIncome(updatedIncome)
         } else {
             res = await IncomeService.createOrEditIncome(payload)
         }
