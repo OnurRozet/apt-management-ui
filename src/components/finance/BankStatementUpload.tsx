@@ -2,7 +2,7 @@
 'use client'
 
 import React, { useState, useRef, useCallback } from 'react'
-import { Upload, FileSpreadsheet, X, CheckCircle2, AlertCircle, Loader2, Save, ArrowLeft } from 'lucide-react'
+import { Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2, Save, ArrowLeft } from 'lucide-react'
 import { BankService } from '@/services/bank'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { BankTransaction } from '@/types'
+import { toast } from 'sonner'
 
 interface BankStatementUploadProps {
   onProcessSuccess?: () => void
@@ -58,7 +59,6 @@ export default function BankStatementUpload({ onProcessSuccess }: BankStatementU
     if (!file) return
     setIsUploading(true)
     setErrorMsg(null)
-    debugger
     try {
       const res = await BankService.uploadExcel(file)
       // Backend ServiceResult formatında dönüyor
@@ -66,14 +66,19 @@ export default function BankStatementUpload({ onProcessSuccess }: BankStatementU
         if (Array.isArray(res.data)) {
           setTransactions(res.data)
           setStep('preview') // Tablo moduna geç
+          toast.success(`${res.data.length} işlem başarıyla analiz edildi`)
         } else {
           setErrorMsg('Beklenmeyen veri formatı.')
+          toast.error('Beklenmeyen veri formatı.')
         }
       } else {
         setErrorMsg(res.statusText || 'Dosya okunurken hata oluştu.')
+        toast.error('Dosya okunurken hata oluştu.')
       }
     } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || 'Dosya okunurken hata oluştu.')
+      const errorMessage = err.response?.data?.message || 'Dosya okunurken hata oluştu.'
+      setErrorMsg(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setIsUploading(false)
     }
@@ -93,16 +98,21 @@ export default function BankStatementUpload({ onProcessSuccess }: BankStatementU
       const res = await BankService.processExcel(transactions)
       if (res.data.isSuccess) {
         // Başarılı
+        toast.success(`${transactions.length} işlem başarıyla kaydedildi`)
         if (onProcessSuccess) onProcessSuccess()
         // Resetle
         setFile(null)
         setTransactions([])
         setStep('upload')
       } else {
-        setErrorMsg(res.data.message || 'Kayıt sırasında hata oluştu.')
+        const errorMessage = res.data.message || 'Kayıt sırasında hata oluştu.'
+        setErrorMsg(errorMessage)
+        toast.error(errorMessage)
       }
     } catch (err: any) {
-      setErrorMsg( `${err.response?.data?.message || ''} İşlem sırasında sunucu hatası.`)
+      const errorMessage = `${err.response?.data?.message || ''} İşlem sırasında sunucu hatası.`
+      setErrorMsg(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setIsProcessing(false)
     }

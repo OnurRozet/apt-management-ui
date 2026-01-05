@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import {PaymentMatrixDto } from '@/types'
 import DuesYearlyTable from './DuesYearlyTable'
 import { Button } from '../ui/button'
@@ -15,23 +15,29 @@ import {
 
 interface DuesTrackingClientProps {
   paymentMatrix: PaymentMatrixDto[];
+  initialYear?: number;
 }
 
 export default function DuesTrackingClient({
   paymentMatrix,
+  initialYear,
 }: DuesTrackingClientProps) {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+  const router = useRouter()
+  const currentYearFromUrl = initialYear || new Date().getFullYear()
 
   const handlePreviousYear = () => {
-    setSelectedYear((prev) => prev - 1)
+    const newYear = currentYearFromUrl - 1
+    router.push(`/dues?year=${newYear}`)
   }
 
   const handleNextYear = () => {
-    setSelectedYear((prev) => prev + 1)
+    const newYear = currentYearFromUrl + 1
+    router.push(`/dues?year=${newYear}`)
   }
 
   const handleYearChange = (value: string) => {
-    setSelectedYear(Number(value))
+    const newYear = Number(value)
+    router.push(`/dues?year=${newYear}`)
   }
 
   // Yıl seçenekleri (mevcut yıl ± 5 yıl)
@@ -53,12 +59,12 @@ export default function DuesTrackingClient({
             variant="outline"
             size="icon"
             onClick={handlePreviousYear}
-            disabled={selectedYear <= currentYear - 5}
+            disabled={currentYearFromUrl <= currentYear - 5}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
 
-          <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
+          <Select value={currentYearFromUrl.toString()} onValueChange={handleYearChange}>
             <SelectTrigger className="w-35">
               <Calendar className="mr-2 h-4 w-4" />
               <SelectValue />
@@ -76,7 +82,7 @@ export default function DuesTrackingClient({
             variant="outline"
             size="icon"
             onClick={handleNextYear}
-            disabled={selectedYear >= currentYear + 5}
+            disabled={currentYearFromUrl >= currentYear + 5}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

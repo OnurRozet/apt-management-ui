@@ -4,6 +4,7 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { User, Home } from "lucide-react";
 import { Apartment } from "@/types";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 interface ApartmentCardProps {
   data: Apartment;
@@ -38,9 +39,9 @@ export default function ApartmentCard({ data, onClick }: ApartmentCardProps) {
         </div>
         
         <div className="flex justify-between items-end">
-          <span className="text-xs text-muted-foreground uppercase font-semibold">Bakiye</span>
+          <span className="text-xs text-muted-foreground uppercase font-semibold">Alacak Bakiye</span>
           <span className={`text-lg font-bold ${isInDebt ? "text-red-500" : "text-emerald-500"}`}>
-            {data.balance}
+            {formatCurrency(data.balance)}
           </span>
         </div>
       </CardContent>

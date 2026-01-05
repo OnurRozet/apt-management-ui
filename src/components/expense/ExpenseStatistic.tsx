@@ -2,15 +2,8 @@ import React from 'react'
 import { Card, CardContent, CardHeader } from '../ui/card'
 import { Calendar, DollarSign, FileText, TrendingDown } from 'lucide-react'
 import { ExpenseSummaryDto } from '@/types'
+import { formatCurrency } from '@/lib/formatCurrency'
 
-
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('tr-TR', {
-    style: 'currency',
-    currency: 'TRY',
-    minimumFractionDigits: 2,
-  }).format(value)
-}
 
 const ExpenseStatistic = ({ reports }: { reports?: ExpenseSummaryDto }) => {
   return (

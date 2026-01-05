@@ -1,5 +1,6 @@
 import ExpensesClient from '@/components/expense/ExpensesClient'
 import { ExpenseCategoryService, ExpenseService } from '@/services/expense'
+import { notFound } from 'next/navigation'
 
 // Build sırasında pre-render edilmesini engelle (API çağrıları runtime'da yapılacak)
 export const dynamic = 'force-dynamic'
@@ -59,9 +60,9 @@ const page = Number(resolvedSearchParams?.page) || 1;
         : undefined,
   });
 
-  // Hata Kontrolü (Basitleştirilmiş)
+  // Hata Kontrolü
   if (expensesRes.status !== 200 || !expensesRes.data.isSuccess) {
-    return <div>Veriler yüklenemedi...</div>;
+    notFound()
   }
   const expenseCategories = await ExpenseCategory();
 
@@ -72,11 +73,7 @@ const page = Number(resolvedSearchParams?.page) || 1;
     !expenseCategories.resultObject ||
     expenseCategories.isSuccess !== true
   ) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <p className="text-muted-foreground">Gider kategorileri yüklenemedi.</p>
-      </div>
-    );
+    notFound()
   }  
 
   return (

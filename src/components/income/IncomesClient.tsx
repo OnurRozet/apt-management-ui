@@ -13,6 +13,7 @@ import IncomeFilter from './IncomeFilter'
 import IncomeTable from './IncomeTable'
 import IncomeDeleting from './IncomeDeleting'
 import { PaginationState } from '@tanstack/react-table'
+import { toast } from 'sonner'
 
 interface IncomesClientProps {
   initialIncomes: Income[]
@@ -135,9 +136,15 @@ export default function IncomesClient({
             await fetchIncomes() // Listeyi yenile
             setIsModalOpen(false)
             setSelectedIncome(null)
+            if (selectedIncome) {
+                toast.success('Gelir başarıyla güncellendi')
+            } else {
+                toast.success('Gelir başarıyla eklendi')
+            }
         }
     } catch (error) {
         console.error('İşlem başarısız:', error)
+        toast.error('Gelir kaydedilemedi. Lütfen tekrar deneyin.')
     }
   }
 
@@ -150,9 +157,13 @@ export default function IncomesClient({
         await fetchIncomes() // Listeyi yenile
         setDeleteDialogOpen(false)
         setIncomeToDelete(null)
+        toast.success('Gelir başarıyla silindi')
+      } else {
+        toast.error('Gelir silinemedi. Lütfen tekrar deneyin.')
       }
     } catch (error) {
         console.error('Silme başarısız:', error)
+        toast.error('Gelir silinemedi. Lütfen tekrar deneyin.')
     } finally {
         setIsDeleting(false)
     }

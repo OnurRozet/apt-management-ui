@@ -1,6 +1,7 @@
 import IncomesClient from '@/components/income/IncomesClient'
 import { IncomeCategoryService, IncomeService } from '@/services/income'
 import { ApartmentService } from '@/services/apartment'
+import { notFound } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
@@ -70,9 +71,9 @@ export default async function IncomesPage({ searchParams }: PageProps) {
     apartmentId: typeof resolvedSearchParams.apartmentId === 'string' ? parseInt(resolvedSearchParams.apartmentId) : undefined,
   })
 
-  // Hata Kontrolü (Basitleştirilmiş)
+  // Hata Kontrolü
   if (incomesRes.status !== 200 || !incomesRes.data.isSuccess) {
-    return <div>Veriler yüklenemedi...</div>
+    notFound()
   }
 
   const incomeResult = incomesRes.data.resultObject;
@@ -83,22 +84,14 @@ export default async function IncomesPage({ searchParams }: PageProps) {
     GetSummaryIncomeReport()
   ]);
 
-// Kategori yüklenemezse
+  // Kategori yüklenemezse
   if (!incomeCategories || !incomeCategories.resultObject || !incomeCategories.isSuccess) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <p className="text-muted-foreground">Gelir kategorileri yüklenemedi.</p>
-      </div>
-    )
+    notFound()
   }
 
-  // Daireler yüklenemezse (Typo düzeltildi: !apartments || !apartments -> !apartments)
-  if (!apartments) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <p className="text-muted-foreground">Daire listesi yüklenemedi.</p>
-      </div>
-    )
+  // Daireler yüklenemezse
+  if (!apartments || !apartments.resultObject) {
+    notFound()
   }
 
   return (

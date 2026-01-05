@@ -1,5 +1,7 @@
 import ApartmentListClient from "@/components/flat/ApartmentListClient";
 import { ApartmentService } from "@/services/apartment";
+import { notFound } from 'next/navigation';
+
 export const dynamic = 'force-dynamic'
 
 
@@ -25,11 +27,7 @@ export default async function ApartmentsPage() {
   const apartments = await ApartmentList();  
 
   if (!apartments || !apartments.isSuccess || !apartments.resultObject?.searchResult) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <p className="text-muted-foreground">Daireler yüklenemedi.</p>
-      </div>
-    );
+    notFound()
   }
 
   return (

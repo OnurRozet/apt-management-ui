@@ -1,5 +1,6 @@
 import DuesTrackingClient from '@/components/dues/DuesTrackingClient'
 import { DueService } from '@/services/due'
+import { notFound } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,17 +33,14 @@ export default async function DuesPage({ searchParams }: PageProps) {
   const res = await GetYearlyPaymentDue(year);
 
   if (!res) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <p className="text-muted-foreground">Aidatlar yüklenemedi.</p>
-      </div>
-    )
+    notFound()
   }
 
   return (
     <div className="space-y-6">
       <DuesTrackingClient
         paymentMatrix={res}
+        initialYear={year}
       />
     </div>
   )

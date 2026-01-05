@@ -194,3 +194,57 @@ export interface PaymentMatrixDto {
   nov: number;
   dec: number;
 }
+
+export interface DashboardSummaryDto {
+  totalIncome: number;
+  expectedIncome: number;
+  totalExpense: number;
+  activeDebtorsCount: number;
+}
+
+export interface ExpenseDistributionDto {
+  categoryName: string;
+  totalAmount: number;
+  percentage: number;
+}
+
+export interface MonthlyTrendDto {
+  monthName: string;
+  totalIncome: number;
+  totalExpense: number;
+}
+
+export interface ApartmentDebtsDto {
+  id: number;
+  apartmentId: number;
+  amount: number;
+  dueDate: string;
+  isClosed: boolean;
+  paidAmount?: number;
+  description: string;
+}
+
+export interface ApartmentDebtsSearch extends SearchRequest {
+  id: number;
+  apartmentId: number;
+  amount: number;
+  dueDate: string;
+  isClosed: boolean;
+  paidAmount?: number;
+  description: string;
+}
+
+export interface DuesSetting {
+  id: number;
+  amount: number;
+  startDate: string;
+  endDate: string;
+  description?: string;
+  isActive: boolean;
+}
+
+export interface DuesSettingSearch extends SearchRequest {
+  isActive?: boolean;
+  startDate?: string;
+  endDate?: string;
+}

@@ -89,28 +89,3 @@ export default function Home() {
     </div>
   );
 }
-
-// import ApartmentGrid from "@/components/ApartmentGrid";
-// // Burada normalde 'fetch' veya veri tabanı sorgusu olur
-
-// export default async function Home() {
-//   // Simüle edilmiş backend verisi
-//   const apartmentData = [
-//     { 
-//       id: "1", number: 12, block: "A", residentName: "Taner Saydam", 
-//       balance: -2450, status: "owner",
-//       transactions: [
-//         { date: "20.12.2023", amount: -1500, description: "Aralık Aidat" },
-//         { date: "15.11.2023", amount: 2000, description: "EFT Ödeme" }
-//       ]
-//     },
-//     // ... daha fazla veri
-//   ];
-
-//   return (
-//     <div className="container mx-auto py-6">
-//       <h1 className="text-3xl font-bold mb-8">Daire Yönetimi</h1>
-//       <ApartmentGrid data={apartmentData as any} />
-//     </div>
-//   );
-// }

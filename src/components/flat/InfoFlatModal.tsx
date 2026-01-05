@@ -1,23 +1,12 @@
 'use client'
 
 import React from 'react'
-import { Home, User, Wallet, Crown } from 'lucide-react'
+import { Home, User, Wallet } from 'lucide-react'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
 import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
 import { Apartment } from '@/types'
-
-const formatBalance = (value: number) => {
-  try {
-    return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: 'TRY',
-      minimumFractionDigits: 0,
-    }).format(value)
-  } catch {
-    return `${value} ₺`
-  }
-}
+import { formatCurrency } from '@/lib/formatCurrency'
 
 interface InfoFlatModalProps {
   data?: Apartment
@@ -55,7 +44,7 @@ const InfoFlatModal = ({ data, open, onOpenChange }: InfoFlatModalProps) => {
               <div className="rounded-lg border bg-muted/40 p-4">
                 <p className="text-xs uppercase text-muted-foreground">Bakiye</p>
                 <div className={`mt-2 text-2xl font-semibold ${balanceClass}`}>
-                  {formatBalance(data.balance)}
+                  {formatCurrency(data.balance)}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">Güncel hesap durumu</p>
               </div>

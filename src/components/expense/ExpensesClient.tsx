@@ -14,6 +14,7 @@ import ExpenseFilter from './ExpenseFilter'
 import ExpenseTable from './ExpenseTable'
 import ExpenseDeleting from './ExpenseDeleting'
 import { PaginationState } from '@tanstack/react-table'
+import { toast } from 'sonner'
 
 interface ExpensesClientProps {
   initialExpenses: Expense[]
@@ -106,6 +107,7 @@ export default function ExpensesClient({ initialExpenses, initialExpenseCategori
         if (res.status === 200 && res.data.isSuccess) {
           // Serverdan güncel verileri çek
           await fetchExpenses()
+          toast.success('Gider başarıyla güncellendi')
         }
       } else {
         // Yeni ekleme
@@ -113,11 +115,13 @@ export default function ExpensesClient({ initialExpenses, initialExpenseCategori
         if (res.status === 200 && res.data.isSuccess) {
           // Serverdan güncel verileri çek
           await fetchExpenses()
+          toast.success('Gider başarıyla eklendi')
         }
       }
       setSelectedExpense(null)
     } catch (error) {
       console.error('Gider kaydedilemedi:', error)
+      toast.error('Gider kaydedilemedi. Lütfen tekrar deneyin.')
       throw error
     }
   }
@@ -136,17 +140,20 @@ export default function ExpensesClient({ initialExpenses, initialExpenseCategori
         // Dialog'u kapat ve state'i temizle
         setDeleteDialogOpen(false)
         setExpenseToDelete(null)
+        toast.success('Gider başarıyla silindi')
       } else {
         // Başarısız olursa da dialog'u kapat
         console.error('Gider silinemedi:', res.data.message || 'Bilinmeyen hata')
         setDeleteDialogOpen(false)
         setExpenseToDelete(null)
+        toast.error('Gider silinemedi. Lütfen tekrar deneyin.')
       }
     } catch (error) {
       console.error('Gider silinemedi:', error)
       // Hata durumunda da dialog'u kapat
       setDeleteDialogOpen(false)
       setExpenseToDelete(null)
+      toast.error('Gider silinemedi. Lütfen tekrar deneyin.')
     } finally {
       setIsDeleting(false)
     }

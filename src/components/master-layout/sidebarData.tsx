@@ -23,7 +23,7 @@ export const data: SidebarDataType = {
       items: [
         {
           title: "Yönetim Paneli",
-          url: "/",
+          url: "/reports",
           icon: "LayoutDashboard",
         },
         {
@@ -112,6 +112,21 @@ export const data: SidebarDataType = {
         title: "Ayarlar",
         url: "#",
         items: [
+            {
+                title: "Gelir Kategorisi",
+                url: "/income-categories",
+                icon: "TrendingUp"
+            },
+            {
+                title: "Gider Kategorisi",
+                url: "/expense-categories",
+                icon: "TrendingDown"
+            },
+            {
+                title: "Aidat Tutarı Belirle",
+                url: "/dues-settings",
+                icon: "Receipt"
+            },
             {
                 title: "Giriş Yap",
                 url: "#",
