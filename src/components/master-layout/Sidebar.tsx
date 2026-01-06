@@ -3,9 +3,10 @@
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarRail } from "../ui/sidebar";
 import {data} from "./sidebarData";
 import Image from "next/image";
-import { LayoutDashboard, Home, Receipt, TrendingUp, TrendingDown, LogIn, UserPlus, LucideIcon, FileUp } from "lucide-react";
+import { LayoutDashboard, Home, Receipt, TrendingUp, TrendingDown, LogIn, UserPlus, LucideIcon, FileUp, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Button } from "../ui/button";
 
 const iconMap: Record<string, LucideIcon> = {
   LayoutDashboard,
@@ -15,10 +16,12 @@ const iconMap: Record<string, LucideIcon> = {
   TrendingDown,
   LogIn,
   UserPlus,
-  FileUp 
+  FileUp ,
+  LogOut
 };
 
-export function SidebarData({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+export function SidebarData(props: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
 
   return (
@@ -39,6 +42,7 @@ export function SidebarData({ ...props }: React.ComponentProps<typeof Sidebar>) 
             <SidebarGroupContent>
               <SidebarMenu>
                 {item.items?.map((item) => {
+
                   const IconComponent = item.icon ? iconMap[item.icon] : null;
                   // Mevcut pathname ile item URL'ini karşılaştır
                   // URL "#" ise veya pathname ile eşleşmiyorsa false
@@ -47,9 +51,9 @@ export function SidebarData({ ...props }: React.ComponentProps<typeof Sidebar>) 
                   return (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild isActive={isActive}>
-                        <Link href={item.url} className="flex items-center gap-2">
+                        <Link href={item.url ?? "#"} className="flex items-center gap-2">
                           {IconComponent && <IconComponent className="h-4 w-4" />}
-                          {item.title}
+                         {item.title}
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

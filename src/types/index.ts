@@ -180,6 +180,7 @@ export interface PaymentMatrixDto {
   apartmentId: number;
   apartmentLabel?: string;
   ownerName?: string;
+  isManager: boolean;
   totalYearlyPaid: number;
   jan: number;
   feb: number;
@@ -247,4 +248,24 @@ export interface DuesSettingSearch extends SearchRequest {
   isActive?: boolean;
   startDate?: string;
   endDate?: string;
+}
+
+export interface RegisterDto {
+  fullName: string;
+  apartmentNumber: number;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface LoginDto {
+  apartmentNumber: string;
+  password: string;
+}
+
+export interface UserDto {
+  id: number;
+  fullName: string;
+  apartmentId: number;
+  apartmentNumber: string;
+  isManager: boolean;
 }

@@ -43,6 +43,9 @@ export default function DuesYearlyTable({ data }: DuesYearlyTableProps) {
     }).format(amount)
   }
 
+  console.log("data", data);
+  
+
   return (
     <Card className="p-6">
       <div className="overflow-x-auto">
@@ -93,10 +96,11 @@ export default function DuesYearlyTable({ data }: DuesYearlyTableProps) {
                       {tracking.apartmentLabel || `Daire ${tracking.apartmentId}`}
                     </TableCell>
                     <TableCell className="sticky left-37.5 z-10 bg-background">
-                      {tracking.ownerName || '-'}
+                      {tracking.isManager ? tracking.ownerName + ` (Yönetici)` : tracking.ownerName}
                     </TableCell>
                     {monthlyAmounts.map((amount, index) => {
                       const isPaid = amount > 0
+                      const isManager = tracking.isManager
                       return (
                         <TableCell key={index} className="text-center">
                           {isPaid ? (
@@ -114,15 +118,30 @@ export default function DuesYearlyTable({ data }: DuesYearlyTableProps) {
                             </div>
                           ) : (
                             <div className="flex flex-col items-center gap-1">
-                              <Badge variant="outline" className="text-muted-foreground">
-                                <XCircle className="h-3 w-3 mr-1" />
-                                Ödenmedi
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">-</span>
+                              {isManager ? (
+                                <Badge
+                                  variant="secondary"
+                                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                                >
+                                  Yönetici
+                                </Badge>
+                              ) : (
+                                <Badge
+                                  variant="outline"
+                                  className="text-muted-foreground"
+                                >
+                                  <XCircle className="h-3 w-3 mr-1" />
+                                  Ödenmedi
+                                </Badge>
+                              )}
+
+                              <span className="text-xs text-muted-foreground">
+                                -
+                              </span>
                             </div>
                           )}
                         </TableCell>
-                      )
+                      );
                     })}
                   </TableRow>
                 )

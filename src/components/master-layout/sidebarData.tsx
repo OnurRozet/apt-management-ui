@@ -1,16 +1,21 @@
+export type UserRole = "Admin" | "User";
+
+export interface NavItem {
+    title: string;
+    url?: string;
+    icon?: string;
+    isActive?: boolean;
+    // İŞTE SİHİR BURADA: Bu öğeyi kimler görebilir?
+    // Eğer undefined ise herkes görür.
+    roles?: UserRole[]; 
+    items?: NavItem[]; // Alt menüler için recursive yapı
+}
+
 export interface SidebarDataType {
     versions: string[];
     navMain: {
         title?: string;
-        url: string;
-        icon?: string;
-        isActive?: boolean;
-        items?: {
-            title: string;
-            url: string;
-            isActive?: boolean;
-            icon?: string;
-        }[];
+        items: NavItem[];
     }[];
 }
 
@@ -19,37 +24,42 @@ export const data: SidebarDataType = {
   navMain: [
     {
       title: "Anasayfa",
-      url: "#",
       items: [
         {
           title: "Yönetim Paneli",
           url: "/reports",
           icon: "LayoutDashboard",
+          roles: ["Admin"], // Sadece Admin görebilir
         },
         {
           title: "Daireler",
           url: "/flats",
           icon: "Home",
+          roles: ["Admin", "User"], // Hem Admin hem de User görebilir
         },
         {
           title: "Aidat Takibi",
           url: "/dues",
           icon: "Receipt",
+          roles: ["Admin"],
         },
         {
           title: "Gelirler",
           url: "/incomes",
           icon: "TrendingUp",
+          roles: ["Admin", "User"],
         },
         {
           title: "Giderler",
           url: "/expenses",
           icon: "TrendingDown",
+          roles: ["Admin", "User"],
         },
-         {
+        {
           title: "Excel ile Gelir-Gider Yükleme",
           url: "/excel-upload",
           icon: "FileUp",
+          roles: ["Admin"],
         },
       ],
     },
@@ -109,36 +119,40 @@ export const data: SidebarDataType = {
     //   ],
     // },
     {
-        title: "Ayarlar",
-        url: "#",
-        items: [
-            {
-                title: "Gelir Kategorisi",
-                url: "/income-categories",
-                icon: "TrendingUp"
-            },
-            {
-                title: "Gider Kategorisi",
-                url: "/expense-categories",
-                icon: "TrendingDown"
-            },
-            {
-                title: "Aidat Tutarı Belirle",
-                url: "/dues-settings",
-                icon: "Receipt"
-            },
-            {
-                title: "Giriş Yap",
-                url: "#",
-                icon: "LogIn"
-            },
-            {
-                title: "Kayıt Ol",
-                url: "#",
-                icon: "UserPlus"
-            },
-        ],
-    }
+      title: "Ayarlar",
+      items: [
+        {
+          title: "Gelir Kategorisi",
+          url: "/income-categories",
+          icon: "TrendingUp",
+          roles: ["Admin"],
+        },
+        {
+          title: "Gider Kategorisi",
+          url: "/expense-categories",
+          icon: "TrendingDown",
+          roles: ["Admin"],
+        },
+        {
+          title: "Aidat Tutarı Belirle",
+          url: "/dues-settings",
+          icon: "Receipt",
+          roles: ["Admin"],
+        },
+      ],
+    },
+    {
+      title: "Kullanıcı İşlemleri",
+      items: [
+        {
+          title: "Çıkış Yap",
+          icon: "LogOut",
+          url: "/auth/logout",
+        },
+      ],
+    },
   ],
 };
+
+
 
