@@ -8,14 +8,17 @@ export const dynamic = 'force-dynamic'
 
 export default function RegisterPage() {
   return (
-    <div className=" flex flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <Link href="#" className="flex items-center gap-2 self-center font-medium">
-          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-4" />
-          </div>
-          <p className="text-xl font-bold">Taneri Site Yönetimi</p>
-        </Link>
+    <div className="flex min-h-screen items-center justify-center p-4 md:p-6 lg:p-8">
+      <div className="w-full max-w-6xl">
+        {/* Logo/Başlık - Mobilde üstte, desktop'ta gizli (form içinde gösterilecek) */}
+        <div className="mb-6 flex justify-center md:hidden">
+          <Link href="#" className="flex items-center gap-2 font-medium">
+            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+              <GalleryVerticalEnd className="size-4" />
+            </div>
+            <p className="text-xl font-bold">Taneri Site Yönetimi</p>
+          </Link>
+        </div>
         <RegisterForm />
       </div>
     </div>

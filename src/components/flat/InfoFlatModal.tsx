@@ -49,6 +49,14 @@ const InfoFlatModal = ({ data, open, onOpenChange }: InfoFlatModalProps) => {
                 <p className="text-xs text-muted-foreground mt-1">Güncel hesap durumu</p>
               </div>
 
+              <div className="rounded-lg border bg-muted/40 p-4">
+                <p className="text-xs uppercase text-muted-foreground">Borç Bakiye</p>
+                <div className={`mt-2 text-2xl font-semibold ${balanceClass}`}>
+                  {formatCurrency(data.openingBalance || 0)}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Geçmiş aidat borçları</p>
+              </div>
+
               <div className="rounded-lg border p-4 flex items-start gap-3">
                 <div className="rounded-full bg-primary/10 p-2 text-primary">
                   <User className="h-4 w-4" />

@@ -13,7 +13,11 @@ const config: Config = {
     extend: {
       backgroundImage: {
         // Senin o özel gradyanını buraya bir isimle tanımlıyoruz
-        'mesh-gradient': "var(--app-bg-gradient)",
+        "mesh-gradient": "var(--app-bg-gradient)",
+        // tailwind.config.ts içinde güncelle:
+
+        "app-gradient":
+          "#FFFFFF",
       },
       // Shadcn'in düzgün çalışması için gerekli olan renk değişkenleri
       colors: {

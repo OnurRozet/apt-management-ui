@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import {PaymentMatrixDto } from '@/types'
+import {ManagementPeriodDto, PaymentMatrixDto } from '@/types'
 import DuesYearlyTable from './DuesYearlyTable'
 import { Button } from '../ui/button'
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
@@ -16,11 +16,13 @@ import {
 interface DuesTrackingClientProps {
   paymentMatrix: PaymentMatrixDto[];
   initialYear?: number;
+  managementPeriods: ManagementPeriodDto[];
 }
 
 export default function DuesTrackingClient({
   paymentMatrix,
   initialYear,
+  managementPeriods,
 }: DuesTrackingClientProps) {
   const router = useRouter()
   const currentYearFromUrl = initialYear || new Date().getFullYear()
@@ -90,7 +92,7 @@ export default function DuesTrackingClient({
       </div>
 
       {/* Yıllık Tablo */}
-      <DuesYearlyTable data={paymentMatrix} />
+      <DuesYearlyTable data={paymentMatrix} managementPeriod={managementPeriods} />
     </div>
   )
 }

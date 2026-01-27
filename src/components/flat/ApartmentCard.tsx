@@ -24,7 +24,7 @@ export default function ApartmentCard({ data, onClick }: ApartmentCardProps) {
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="flex items-center gap-2">
           <Home className="h-4 w-4 text-muted-foreground" />
-          <span className="font-bold text-lg">Daire No: {data.id}</span>
+          <span className="font-bold text-lg">{data.label}</span>
         </div>
         <Badge variant={data.ownerName === "empty" ? "secondary" : "outline"}>
           {data.ownerName === "owner" ? "Ev Sahibi" : data.ownerName === "tenant" ? "Kiracı" : "Boş"}

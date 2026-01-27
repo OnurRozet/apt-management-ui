@@ -80,6 +80,9 @@
   --color-sidebar-border: var(--sidebar-border);
 
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --background-image-app-gradient: var(--app-gradient);
+
 }
 :root {
 
@@ -95,11 +98,6 @@
   --mesh-teal: 185 43% 83%;
 
   --card: oklch(1 0 0);
-
-  --app-bg-gradient: radial-gradient(at 69% 11%, hsla(217, 58%, 86%, 1) 0%, transparent 100%),
-                     radial-gradient(at 39% 99%, hsla(185, 43%, 83%, 1) 0%, transparent 100%),
-                     radial-gradient(at 57% 70%, hsla(217, 58%, 86%, 1) 0%, transparent 100%),
-                     radial-gradient(at 96% 58%, hsla(185, 43%, 83%, 1) 0%, transparent 100%);
 
   --card-foreground: oklch(0.129 0.042 264.695);
 
@@ -156,6 +154,14 @@
   --sidebar-border: oklch(0.929 0.013 255.508);
 
   --sidebar-ring: oklch(0.704 0.04 256.788);
+  
+  --app-gradient: linear-gradient(
+    90deg,
+    rgba(169, 222, 245, 1) 0%,
+    rgb(67, 215, 241) 80%,
+    rgba(4, 218, 233, 1) 100%
+  );
+
 }
 
 .dark {
@@ -221,6 +227,8 @@
   --sidebar-border: oklch(1 0 0 / 10%);
 
   --sidebar-ring: oklch(0.551 0.027 264.364);
+
+  
 }
 
 @layer base {

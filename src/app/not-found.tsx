@@ -32,7 +32,7 @@ export default function NotFound() {
               variant="default"
               className="flex-1"
             >
-              <Link href="/">
+              <Link href="/reports">
                 <Home className="mr-2 h-4 w-4" />
                 Ana Sayfaya Dön
               </Link>

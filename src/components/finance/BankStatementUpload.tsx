@@ -95,6 +95,7 @@ export default function BankStatementUpload({ onProcessSuccess }: BankStatementU
   const handleProcess = async () => {
     setIsProcessing(true)
     try {
+      debugger
       const res = await BankService.processExcel(transactions)
       if (res.data.isSuccess) {
         // Başarılı

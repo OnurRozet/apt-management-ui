@@ -139,6 +139,12 @@ export const data: SidebarDataType = {
           icon: "Receipt",
           roles: ["Admin"],
         },
+        {
+          title: "Site Yöneticisi Ekle",
+          url: "/management-period",
+          icon: "Receipt",
+          roles: ["Admin"],
+        },
       ],
     },
     {

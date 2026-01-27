@@ -38,6 +38,7 @@ export interface Apartment {
   tenantName?: string;
   balance: number;
   isManager: boolean;
+  openingBalance?: number;
 }
 
 export interface ApartmentSearch extends SearchRequest {
@@ -182,6 +183,8 @@ export interface PaymentMatrixDto {
   ownerName?: string;
   isManager: boolean;
   totalYearlyPaid: number;
+  totalYearlyDebt: number;
+  amount: number;
   jan: number;
   feb: number;
   mar: number;
@@ -268,4 +271,19 @@ export interface UserDto {
   apartmentId: number;
   apartmentNumber: string;
   isManager: boolean;
+}
+
+export interface ManagementPeriodDto {
+  id: number;
+  apartmentId: number;
+  startDate: string;
+  endDate: string;
+  isExemptFromDues: boolean;
+}
+
+export interface ManagementPeriodSearch extends SearchRequest {
+  startDate?: string;
+  endDate?: string;
+  isExemptFromDues?: boolean;
+  keyword?: string;
 }

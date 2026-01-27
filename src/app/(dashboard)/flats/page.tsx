@@ -1,6 +1,6 @@
 import ApartmentListClient from "@/components/flat/ApartmentListClient";
 import { ApartmentService } from "@/services/apartment";
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic'
 
@@ -26,8 +26,12 @@ async function ApartmentList() {
 export default async function ApartmentsPage() {
   const apartments = await ApartmentList();  
 
-  if (!apartments || !apartments.isSuccess || !apartments.resultObject?.searchResult) {
+  if (!apartments || !apartments.isSuccess ) {
     notFound()
+  }
+
+  if(apartments.resultObject.searchResult.length === 0) {
+    redirect('/flats/import');
   }
 
   return (

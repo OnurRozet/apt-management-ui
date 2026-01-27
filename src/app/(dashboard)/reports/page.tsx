@@ -1,4 +1,5 @@
 import ReportClient from "@/components/report/ReportClient";
+import ReportsEmptyState from "@/components/report/ReportEmptyState";
 import { ReportService } from "@/services/report";
 import { notFound } from 'next/navigation';
 
@@ -53,8 +54,17 @@ const ReportPage = async () => {
         GetMonthlyTrends()
     ]);
 
-    if (!summaryCards || !expenseDistribution || !monthlyTrends) {
-        notFound()
+    const isDataEmpty = 
+        !summaryCards || 
+        !expenseDistribution || expenseDistribution.length === 0 || 
+        !monthlyTrends || monthlyTrends.length === 0;
+
+   if (isDataEmpty) {
+        return (
+            <div className="container mx-auto p-6">
+                 <ReportsEmptyState />
+            </div>
+        );
     }
 
 
