@@ -27,36 +27,36 @@ export async function Get<T>(
   endpointUri: string,
   requestData?: any,
   isAnonymous?: boolean,
-  clientToken?: string
+  clientToken?: string,
 ) {
   return axios.get<T>(BASE_URI + `${endpointUri}`, {
     headers: getHeaders(isAnonymous, clientToken),
     params: requestData ? { ...requestData } : undefined,
-  httpsAgent: typeof window === 'undefined' ? httpsAgent : undefined
+    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
   });
 }
 export async function Put<T>(
   endpointUri: string,
   requestData?: any,
   isAnonymous?: boolean,
-  clientToken?: string
+  clientToken?: string,
 ) {
   return axios.put<T>(BASE_URI + `${endpointUri}`, requestData, {
     headers: getHeaders(isAnonymous, clientToken),
-   httpsAgent: typeof window === 'undefined' ? httpsAgent : undefined
+    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
   });
 }
 export async function Post<T>(
   endpointUri: string,
   requestData?: any,
   isAnonymous?: boolean,
-  clientToken?: string
+  clientToken?: string,
 ) {
   return axios(BASE_URI + `${endpointUri}`, {
     method: "POST",
     data: requestData,
     headers: getHeaders(isAnonymous, clientToken),
-    httpsAgent: typeof window === 'undefined' ? httpsAgent : undefined
+    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
   });
 }
 
@@ -64,30 +64,44 @@ export async function PostFile<T>(
   endpointUri: string,
   file: File,
   isAnonymous?: boolean,
-  clientToken?: string
+  clientToken?: string,
 ) {
   const formData = new FormData();
-  formData.append('file', file);
-  
+  formData.append("file", file);
+
   const baseHeaders = getHeaders(isAnonymous, clientToken);
-  
+
   return axios.post<T>(BASE_URI + `${endpointUri}`, formData, {
     headers: {
       ...baseHeaders,
-      'Content-Type': 'multipart/form-data',
+      "Content-Type": "multipart/form-data",
     },
-    httpsAgent: typeof window === 'undefined' ? httpsAgent : undefined
+    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
   });
 }
 export async function Delete<T>(
   endpointUri: string,
   requestData?: any,
   isAnonymous?: boolean,
-  clientToken?: string
+  clientToken?: string,
 ) {
   return axios.delete<T>(BASE_URI + `${endpointUri}`, {
     headers: getHeaders(isAnonymous, clientToken),
     params: { ...requestData },
+    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
+  });
+}
+
+export async function GetBlob(
+  endpointUri: string,
+  requestData?: any,
+  isAnonymous?: boolean,
+  clientToken?: string,
+) {
+  return axios.get(BASE_URI + `${endpointUri}`, {
+    headers: getHeaders(isAnonymous, clientToken),
+    params: requestData ? { ...requestData } : undefined,
+    responseType: "blob",
     httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
   });
 }

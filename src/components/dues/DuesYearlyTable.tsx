@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
+"use client";
 
-import { ManagementPeriodDto, PaymentMatrixDto } from '@/types'
+import { ManagementPeriodDto, PaymentMatrixDto } from "@/types";
 import {
   Table,
   TableBody,
@@ -9,180 +8,302 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../ui/table'
-import { Badge } from '../ui/badge'
-import { Card } from '../ui/card'
-import { CheckCircle2, XCircle, ShieldCheck, History } from 'lucide-react'
+} from "../ui/table";
+import { Badge } from "../ui/badge";
+import { CheckCircle2, XCircle, ShieldCheck } from "lucide-react";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 interface DuesYearlyTableProps {
-  data: PaymentMatrixDto[]
-  managementPeriod?: ManagementPeriodDto[]
+  data: PaymentMatrixDto[];
+  managementPeriod?: ManagementPeriodDto[];
 }
 
 const monthNames = [
-  'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-  'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık',
-]
+  "Ocak",
+  "Şubat",
+  "Mart",
+  "Nisan",
+  "Mayıs",
+  "Haziran",
+  "Temmuz",
+  "Ağustos",
+  "Eylül",
+  "Ekim",
+  "Kasım",
+  "Aralık",
+];
 
-export default function DuesYearlyTable({ data, managementPeriod }: DuesYearlyTableProps) {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: 'TRY',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount)
-  }
-
-  const isDateInManagementRange = (monthIndex: number, year: number, apartmentId: number) => {
+export default function DuesYearlyTable({
+  data,
+  managementPeriod,
+}: DuesYearlyTableProps) {
+  const isDateInManagementRange = (
+    monthIndex: number,
+    year: number,
+    apartmentId: number,
+  ) => {
     if (!managementPeriod || managementPeriod.length === 0) return false;
     const cellDate = new Date(year, monthIndex, 15);
-    return managementPeriod.some(period => {
+    return managementPeriod.some((period) => {
       if (period.apartmentId !== apartmentId) return false;
       const start = new Date(period.startDate);
       const end = period.endDate ? new Date(period.endDate) : null;
-      return end ? (cellDate >= start && cellDate <= end) : (cellDate >= start);
+      return end ? cellDate >= start && cellDate <= end : cellDate >= start;
     });
   };
 
   const colWidths = {
-    apartment: '100px',
-    owner: '150px',
-    transfer: '130px'
-  }
+    apartment: "100px",
+    owner: "150px",
+    summary: "120px",
+  };
 
-  // Sticky Left hesapları (Kümülatif)
+  // Sticky Left positions
   const leftPos = {
-    apartment: '0px',
-    owner: '100px', // colWidths.apartment
-    transfer: '250px' // colWidths.apartment + colWidths.owner
-  }
+    apartment: "0px",
+    owner: "100px",
+  };
 
   return (
-    <Card className="p-6">
-      <div className="overflow-x-auto">
-        <Table className="border-separate border-spacing-0">
-          <TableHeader>
+    <div className="overflow-x-auto">
+      <Table className="border-separate border-spacing-0 w-full text-sm">
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead
+              style={{ left: leftPos.apartment, minWidth: colWidths.apartment }}
+              className="sticky left-0 z-30 bg-muted/95 backdrop-blur border-b border-border h-12 font-bold text-foreground shadow-[1px_0_0_0_hsl(var(--border))]"
+            >
+              Daire No
+            </TableHead>
+            <TableHead
+              style={{ left: leftPos.owner, minWidth: colWidths.owner }}
+              className="sticky z-30 bg-muted/95 backdrop-blur border-b border-border h-12 font-bold text-foreground shadow-[1px_0_0_0_hsl(var(--border))]"
+            >
+              Ev Sahibi
+            </TableHead>
+
+            <TableHead
+              style={{ minWidth: colWidths.summary }}
+              className="text-center bg-amber-500/10 backdrop-blur border-b border-border h-12 font-bold text-amber-700 dark:text-amber-500"
+            >
+              Geçmişten Devir
+            </TableHead>
+
+            <TableHead
+              style={{ minWidth: colWidths.summary }}
+              className="text-center bg-blue-500/10 backdrop-blur border-b border-border h-12 font-bold text-blue-700 dark:text-blue-400"
+            >
+              Toplam Borç
+            </TableHead>
+
+            <TableHead
+              style={{ minWidth: colWidths.summary }}
+              className="text-center bg-emerald-500/10 backdrop-blur border-b border-border h-12 font-bold text-emerald-700 dark:text-emerald-400"
+            >
+              Toplam Ödenen
+            </TableHead>
+
+            <TableHead
+              style={{ minWidth: colWidths.summary }}
+              className="text-center bg-red-500/10 backdrop-blur border-b border-border h-12 font-bold text-red-700 dark:text-red-400"
+            >
+              Kalan Borç
+            </TableHead>
+
+            {monthNames.map((month, index) => (
+              <TableHead
+                key={index}
+                className="text-center min-w-[100px] bg-muted/50 border-b border-border font-medium"
+              >
+                {month}
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.length === 0 ? (
             <TableRow>
-              <TableHead
-                style={{ left: leftPos.apartment, minWidth: colWidths.apartment }}
-                className="sticky left-0 z-30 bg-background border-b shadow-[1px_0_0_0_#e2e8f0]">
-                Daire No
-              </TableHead>
-              <TableHead
-                style={{ left: leftPos.owner, minWidth: colWidths.owner }}
-                className="sticky z-30 bg-background border-b shadow-[1px_0_0_0_#e2e8f0]">
-                Ev Sahibi
-              </TableHead>
-              
-              <TableHead
-                style={{ left: leftPos.transfer, minWidth: colWidths.transfer }}
-                className="sticky z-30 text-center bg-amber-50/90 dark:bg-amber-950/30 font-bold text-amber-700 dark:text-amber-500 border-b shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]">
-                Geçmişten Devir
-              </TableHead>
-
-              {monthNames.map((month, index) => (
-                <TableHead key={index} className="text-center min-w-[130px] border-b">
-                  {month}
-                </TableHead>
-              ))}
+              <TableCell
+                colSpan={18}
+                className="text-center text-muted-foreground py-8"
+              >
+                Henüz daire kaydı bulunmamaktadır.
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={15} className="text-center text-muted-foreground py-8">
-                  Henüz daire kaydı bulunmamaktadır.
-                </TableCell>
-              </TableRow>
-            ) : (
-              data.map((tracking) => {
-                const monthlyAmounts = [
-                  tracking.jan, tracking.feb, tracking.mar, tracking.apr,
-                  tracking.may, tracking.jun, tracking.jul, tracking.aug,
-                  tracking.sep, tracking.oct, tracking.nov, tracking.dec,
-                ]
+          ) : (
+            data.map((tracking) => {
+              const monthlyAmounts = [
+                tracking.jan,
+                tracking.feb,
+                tracking.mar,
+                tracking.apr,
+                tracking.may,
+                tracking.jun,
+                tracking.jul,
+                tracking.aug,
+                tracking.sep,
+                tracking.oct,
+                tracking.nov,
+                tracking.dec,
+              ];
 
-                const transferDebt = (tracking as any).transferredDebt || 0;
+              const transferDebt = tracking.transferredDebt || 0;
+              const totalPaid = tracking.totalPaid || 0;
+              const remainingDebt =
+                tracking.currentBalance ;
 
-                return (
-                  <TableRow key={tracking.apartmentId} className="hover:bg-muted/50 transition-colors group">
-                    <TableCell 
-                      style={{ left: leftPos.apartment }}
-                      className="sticky left-0 z-10 bg-background font-medium border-r group-hover:bg-muted/50">
-                      {tracking.apartmentLabel}
-                    </TableCell>
-                    <TableCell
-                      style={{ left: leftPos.owner }}
-                      className="sticky z-10 bg-background border-r group-hover:bg-muted/50">
-                      <div className="flex items-center gap-2">
-                        <span className="truncate max-w-[120px]">{tracking.ownerName}</span>
-                        {tracking.isManager && <ShieldCheck className="h-4 w-4 text-blue-500 shrink-0" />}
-                      </div>
-                    </TableCell>
+              // Mock management year if needed, usually passed as prop or context
+              const year = new Date().getFullYear();
 
-                    <TableCell
-                      style={{ left: leftPos.transfer }}
-                      className="sticky z-10 text-center bg-amber-50/30 dark:bg-amber-950/10 border-r shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] group-hover:bg-amber-100/40 dark:group-hover:bg-amber-900/20">
-                      {transferDebt > 0 ? (
-                        <div className="flex flex-col items-center gap-1">
-                          <Badge variant="outline" className="border-amber-500 text-amber-700 dark:text-amber-400 bg-amber-100/50 py-0 text-[10px]">
-                            <History className="h-3 w-3 mr-1" /> Devir
-                          </Badge>
-                          <span className="text-xs font-bold text-amber-800 dark:text-amber-500">
-                            {formatCurrency(transferDebt)}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground text-[10px] italic font-medium">Borçsuz</span>
+              return (
+                <TableRow
+                  key={tracking.apartmentId}
+                  className="group hover:bg-muted/30 transition-colors"
+                >
+                  {/* Daire No */}
+                  <TableCell
+                    style={{ left: leftPos.apartment }}
+                    className="sticky left-0 z-20 bg-background font-medium border-r border-border group-hover:bg-muted/30 whitespace-nowrap"
+                  >
+                    {tracking.apartmentLabel}
+                  </TableCell>
+
+                  {/* Ev Sahibi */}
+                  <TableCell
+                    style={{ left: leftPos.owner }}
+                    className="sticky z-20 bg-background border-r border-border group-hover:bg-muted/30"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="truncate max-w-[120px] text-xs font-medium">
+                        {tracking.ownerName}
+                      </span>
+                      {tracking.isManager && (
+                        <ShieldCheck className="h-3 w-3 text-primary shrink-0" />
                       )}
-                    </TableCell>
+                    </div>
+                  </TableCell>
 
-                    {monthlyAmounts.map((amount, index) => {
-                      const isPaid = amount > 0;
-                      const isExempt = isDateInManagementRange(index, 2025, tracking.apartmentId);
-
-                      return (
-                        <TableCell 
-                          key={index} 
-                          className={`text-center border-r last:border-r-0 ${isExempt && !isPaid ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`}
+                  {/* Geçmişten Devir */}
+                  <TableCell className="text-center bg-amber-500/5 group-hover:bg-amber-500/10 border-r border-border transition-colors">
+                    {transferDebt > 0 ? (
+                      <div className="flex flex-col items-center gap-0.5 py-1">
+                        <Badge
+                          variant="outline"
+                          className="border-amber-500/50 text-amber-600 dark:text-amber-400 bg-amber-500/10 py-0 h-5 px-2 text-[10px] font-normal"
                         >
-                          <div className="flex flex-col items-center gap-1">
-                            {isPaid ? (
-                              <>
-                                <Badge className="bg-green-500 hover:bg-green-600 text-white border-0 h-6">
-                                  <CheckCircle2 className="h-3 w-3 mr-1" /> Ödendi
-                                </Badge>
-                                <span className="text-[11px] font-bold text-green-700 dark:text-green-400">
-                                  {formatCurrency(amount)}
-                                </span>
-                              </>
-                            ) : isExempt ? (
-                              <>
-                                <Badge variant="secondary" className="bg-blue-600 text-white border-0 h-6">
-                                  Yönetici
-                                </Badge>
-                                <span className="text-[10px] text-blue-600 font-bold uppercase italic">Muaf</span>
-                              </>
-                            ) : (
-                              <>
-                                <Badge variant="outline" className="text-muted-foreground/60 h-6">
-                                  <XCircle className="h-3 w-3 mr-1" /> Ödenmedi
-                                </Badge>
-                                <span className="text-[11px] text-muted-foreground">-</span>
-                              </>
-                            )}
-                          </div>
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                )
-              })
-            )}
-          </TableBody>
-        </Table>
-      </div>
-    </Card>
-  )
+                          Devir
+                        </Badge>
+                        <span className="text-xs font-bold text-amber-700 dark:text-amber-500 tabular-nums">
+                          {formatCurrency(transferDebt)}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-muted-foreground/50">
+                        -
+                      </span>
+                    )}
+                  </TableCell>
+
+                  {/* Toplam Borç */}
+                  <TableCell className="text-center bg-blue-500/5 group-hover:bg-blue-500/10 border-r border-border transition-colors">
+                    <div className="flex flex-col items-center py-1">
+                      <span className="text-xs font-bold text-blue-700 dark:text-blue-400 tabular-nums">
+                        {formatCurrency(tracking.totalDebtUntilNow)}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        (Yıllık: {formatCurrency(tracking.totalYearlyDebt)})
+                      </span>
+                    </div>
+                  </TableCell>
+
+                  {/* Toplam Ödenen */}
+                  <TableCell className="text-center bg-emerald-500/5 group-hover:bg-emerald-500/10 border-r border-border transition-colors">
+                    {totalPaid > 0 ? (
+                      <div className="flex flex-col items-center gap-0.5 py-1">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-500" />
+                        <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 tabular-nums">
+                          {formatCurrency(totalPaid)}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-muted-foreground/50">
+                        -
+                      </span>
+                    )}
+                  </TableCell>
+
+                  {/* Kalan Borç */}
+                  <TableCell className="text-center bg-red-500/5 group-hover:bg-red-500/10 border-r border-border transition-colors">
+                    {remainingDebt > 0 ? (
+                      <div className="flex flex-col items-center gap-0.5 py-1">
+                        <Badge
+                          variant="outline"
+                          className="border-red-500/50 text-red-600 dark:text-red-400 bg-red-500/10 py-0 h-5 px-2 text-[10px] font-normal"
+                        >
+                          Borç
+                        </Badge>
+                        <span className="text-xs font-bold text-red-700 dark:text-red-400 tabular-nums">
+                          {formatCurrency(remainingDebt)}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-0.5 py-1">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-500" />
+                        <span className="text-[10px] text-emerald-600 dark:text-emerald-400">
+                          Borç Yok
+                        </span>
+                      </div>
+                    )}
+                  </TableCell>
+
+                  {/* Aylık Ödemeler */}
+                  {monthlyAmounts.map((amount, index) => {
+                    const isPaid = amount > 0;
+                    const isExempt = isDateInManagementRange(
+                      index,
+                      year,
+                      tracking.apartmentId,
+                    );
+
+                    return (
+                      <TableCell
+                        key={index}
+                        className={`text-center p-2 border-r border-border last:border-r-0 ${isExempt && !isPaid ? "bg-blue-500/5" : ""}`}
+                      >
+                        <div className="flex flex-col items-center justify-center min-h-[40px]">
+                          {isPaid ? (
+                            <div className="flex flex-col items-center gap-0.5">
+                              <div className="flex items-center text-emerald-600 dark:text-emerald-500">
+                                <CheckCircle2 className="h-4 w-4" />
+                              </div>
+                              <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 tabular-nums leading-none">
+                                {formatCurrency(amount)}
+                              </span>
+                            </div>
+                          ) : isExempt ? (
+                            <div className="flex flex-col items-center">
+                              <Badge
+                                variant="secondary"
+                                className="bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 border-0 h-5 px-1.5 text-[10px]"
+                              >
+                                Muaf
+                              </Badge>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center">
+                              <XCircle className="h-4 w-4 text-muted-foreground/20" />
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
 }

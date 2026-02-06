@@ -1,10 +1,11 @@
 'use client'
 
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { User, Home } from "lucide-react";
+import { User, Home, Wallet } from "lucide-react";
 import { Apartment } from "@/types";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { cn } from "@/lib/utils";
 
 interface ApartmentCardProps {
   data: Apartment;
@@ -12,39 +13,58 @@ interface ApartmentCardProps {
 }
 
 export default function ApartmentCard({ data, onClick }: ApartmentCardProps) {
-  
-  // Bakiye rengini belirleme (Senior dokunuşu: logic'i render içinde temiz tut)
   const isInDebt = data.balance < 0;
+  
+  // Basit bir mantık: Kiracı adı varsa "Kiracı", yoksa "Ev Sahibi" (Varsayım)
+  // Gerçek veride 'status' alanı olsa daha iyi olurdu.
+  const isTenant = !!data.tenantName;
+  const statusLabel = isTenant ? "Kiracı" : "Ev Sahibi";
+  const statusVariant = isTenant ? "secondary" : "default";
 
   return (
     <Card 
-      className="cursor-pointer hover:border-primary transition-all duration-200 hover:shadow-md"
+      className="group relative cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-l-4"
+      style={{ borderLeftColor: isInDebt ? "hsl(var(--destructive))" : "hsl(var(--primary))" }}
       onClick={onClick}
     >
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <div className="flex items-center gap-2">
-          <Home className="h-4 w-4 text-muted-foreground" />
-          <span className="font-bold text-lg">{data.label}</span>
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+             <Home className="h-5 w-5" />
+          </div>
+          <div>
+             <h3 className="font-bold text-lg leading-none">{data.label}</h3>
+             {/* <p className="text-xs text-muted-foreground mt-1">Blok A</p> */}
+          </div>
         </div>
-        <Badge variant={data.ownerName === "empty" ? "secondary" : "outline"}>
-          {data.ownerName === "owner" ? "Ev Sahibi" : data.ownerName === "tenant" ? "Kiracı" : "Boş"}
+        <Badge variant={statusVariant} className="font-normal">
+          {statusLabel}
         </Badge>
       </CardHeader>
-      <CardContent>
-        <div className="flex items-center gap-2 mb-4">
-          <User className="h-4 w-4 text-slate-400" />
-          <span className="text-sm text-slate-600 truncate">
-            {data.tenantName || "Sakin Bilgisi Yok"}
-          </span>
-        </div>
-        
-        <div className="flex justify-between items-end">
-          <span className="text-xs text-muted-foreground uppercase font-semibold">Alacak Bakiye</span>
-          <span className={`text-lg font-bold ${isInDebt ? "text-red-500" : "text-emerald-500"}`}>
-            {formatCurrency(data.balance)}
-          </span>
+      
+      <CardContent className="pb-2">
+        <div className="flex items-center gap-3 rounded-md bg-muted/50 p-2 text-sm">
+           <User className="h-4 w-4 text-muted-foreground" />
+           <div className="flex flex-col">
+              <span className="text-xs text-muted-foreground">Sakin:</span>
+              <span className="font-medium truncate max-w-[150px]">
+                {data.tenantName || data.ownerName}
+              </span>
+           </div>
         </div>
       </CardContent>
+
+      <CardFooter className="pt-2 flex justify-between items-center border-t bg-muted/20">
+         <span className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+            <Wallet className="h-3 w-3" /> Alacak Bakiye
+         </span>
+         <span className={cn(
+            "text-lg font-bold tabular-nums",
+            isInDebt ? "text-destructive" : "text-emerald-600"
+         )}>
+            {formatCurrency(data.balance)}
+         </span>
+      </CardFooter>
     </Card>
   );
 }

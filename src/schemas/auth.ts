@@ -11,16 +11,12 @@ export type LoginInput = z.infer<typeof LoginSchema>;
 
 export const registerSchema = z.object({
   fullName: z.string().min(1, "İsim soyisim zorunludur."),
-  apartmentNumber: z
-    .number()
-    .min(1, "Daire numarası zorunludur.")
-    .transform((val) => Number(val))
-    .pipe(z.number().int().positive("Daire numarası pozitif olmalıdır.")),
+  apartmentNumber: z.string().min(1, "Daire numarası zorunludur."),
   password: z.string().min(6, "Şifre en az 6 karakter olmalı."),
-  confirmPassword: z.string().min(6, "Şifre tekrar alanı zorunludur."),
-}).refine((data) => data.password === data.confirmPassword, {
+  passwordConfirm: z.string().min(6, "Şifre tekrar alanı zorunludur."),
+}).refine((data) => data.password === data.passwordConfirm, {
   message: "Şifreler eşleşmiyor.",
-  path: ["confirmPassword"],
+  path: ["passwordConfirm"],
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;

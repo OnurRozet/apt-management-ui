@@ -25,6 +25,8 @@ interface ExpensesClientProps {
 
 
 
+import { Separator } from '../ui/separator'
+
 export default function ExpensesClient({ initialExpenses, initialExpenseCategories, initialTotalCount, reports }: ExpensesClientProps) {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses)
   const [totalCount, setTotalCount] = useState<number>(initialTotalCount || 0)
@@ -181,12 +183,14 @@ export default function ExpensesClient({ initialExpenses, initialExpenseCategori
             </p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={handleAdd} className="gap-2">
+            <Button onClick={handleAdd} className="gap-2 shadow-sm">
               <Plus className="h-4 w-4" />
               Yeni Gider Ekle
             </Button>
           </div>
         </div>
+        
+        <Separator />
 
         {/* İstatistikler */}
         <ExpenseStatistic reports={reports} />

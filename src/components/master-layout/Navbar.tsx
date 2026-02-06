@@ -1,38 +1,34 @@
-import Link from "next/link"
-import { Button } from "../ui/button"
-import Image from "next/image"
+// import Link from "next/link"
+// import { Button } from "../ui/button"
+// import Image from "next/image"
+// import { SidebarTrigger } from "../ui/sidebar"
+// import { Separator } from "../ui/separator"
 
+// const Navbar = () => {
+//   return (
+//     <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-16">
+//       <div className="flex items-center gap-2 px-4">
+//         <SidebarTrigger className="-ml-1" />
+//         <Separator orientation="vertical" className="mr-2 h-4" />
+//         <Link href="/" className="flex items-center gap-2 font-medium text-lg text-foreground">
+//            {/* Logo only on mobile maybe? or always if you want */}
+//            {/* <Image src="/home.png" alt="Logo" width={24} height={24} /> */}
+//            <span>Yönetim Paneli</span>
+//         </Link>
+//       </div>
 
-const Navbar = () => {
-  return (
-    <nav className="border-b bg-white dark:bg-slate-950">
-      <div className="flex h-16 items-center justify-between px-4 mx-20">
-        {/* Logo Alanı */}
-        <Link href="/" className=" flex flex-row items-center gap-2 font-medium text-2xl text-slate-800 dark:text-white">
-          <Image src="/home.png" alt="Logo" width={40} height={40} />
-          Taneri Apartmanı Site Yönetimi
-        </Link>
+//       <div className="ml-auto flex items-center gap-4">
+//           {/* Top Menu Links - maybe hide on mobile? */}
+//             <Link href="/flats" className="text-sm font-medium transition-colors hover:text-primary hidden md:block">
+//             Daireler
+//           </Link>
+         
+//           <Button variant="outline" size="sm" className="hidden md:flex">
+//              Oturumu Kapat
+//           </Button>
+//       </div>
+//     </header>
+//   )
+// }
 
-        {/* Menü Linkleri */}
-        <div className="flex items-center gap-4">
-          <Link href="/flats" className="text-sm font-medium transition-colors hover:text-primary">
-            Daireler
-          </Link>
-          <Link href="/" className="text-sm font-medium transition-colors hover:text-primary">
-            Aidat Takibi
-          </Link>
-          <Link href="/" className="text-sm font-medium transition-colors hover:text-primary">
-            Yönetim
-          </Link>
-          
-          {/* Giriş Yap Butonu - Shadcn Kullanarak */}
-          <Button variant="default" size="sm">
-            Giriş Yap
-          </Button>
-        </div>
-      </div>
-    </nav>
-  )
-}
-
-export default Navbar
+// export default Navbar

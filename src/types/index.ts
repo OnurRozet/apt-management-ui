@@ -84,10 +84,10 @@ export interface ExpenseCategorySearch extends SearchRequest {
 }
 
 export interface IncomeSummaryReportItem {
-    apartmentLabel?: string;
-    totalAmount: number;
-    ownerName?: string;
-    transactionCount: number;
+  apartmentLabel?: string;
+  totalAmount: number;
+  ownerName?: string;
+  transactionCount: number;
 }
 
 export interface Income {
@@ -108,7 +108,7 @@ export interface IncomeSummaryDto {
   totalIncome: number;
   totalIncomeByCurrentMonth: number;
   totalItemCount: number;
-  mostRegularPayer : IncomeSummaryReportItem[] | null;
+  mostRegularPayer: IncomeSummaryReportItem[] | null;
   highestApartmentFeeRevenue: IncomeSummaryReportItem | null;
 }
 
@@ -137,7 +137,7 @@ export interface IncomeCategorySearch extends SearchRequest {
 }
 
 export interface BankTransaction {
-  id: number;
+  stagingId: number;
   date: string;
   transactionId: string;
   description: string;
@@ -146,11 +146,11 @@ export interface BankTransaction {
   suggestedCategory: string;
   matchedApartmentId?: number;
   isProcessed: boolean;
-} 
+}
 
 export interface ExpenseSummaryReportItem {
-    expenseCategoryName?: string;
-    totalAmount: number;
+  expenseCategoryName?: string;
+  totalAmount: number;
 }
 
 export interface ExpenseSummaryDto {
@@ -182,8 +182,11 @@ export interface PaymentMatrixDto {
   apartmentLabel?: string;
   ownerName?: string;
   isManager: boolean;
-  totalYearlyPaid: number;
+  totalPaid: number;
   totalYearlyDebt: number;
+  totalDebtUntilNow: number;
+  transferredDebt: number;
+  currentBalance: number;
   amount: number;
   jan: number;
   feb: number;
@@ -254,23 +257,24 @@ export interface DuesSettingSearch extends SearchRequest {
 }
 
 export interface RegisterDto {
-  fullName: string;
-  apartmentNumber: number;
-  password: string;
-  confirmPassword: string;
+  FullName: string;
+  ApartmentNumber: string;
+  Password: string;
+  PasswordConfirm: string;
 }
 
 export interface LoginDto {
-  apartmentNumber: string;
-  password: string;
+  ApartmentNumber: string;
+  Password: string;
 }
 
 export interface UserDto {
-  id: number;
+  id?: number;
   fullName: string;
-  apartmentId: number;
+  apartmentId?: number;
   apartmentNumber: string;
   isManager: boolean;
+  email?: string;
 }
 
 export interface ManagementPeriodDto {

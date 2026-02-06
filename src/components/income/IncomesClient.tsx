@@ -15,6 +15,8 @@ import IncomeDeleting from './IncomeDeleting'
 import { PaginationState } from '@tanstack/react-table'
 import { toast } from 'sonner'
 
+import { Separator } from '../ui/separator'
+
 interface IncomesClientProps {
   initialIncomes: Income[]
   initialIncomeCategories: IncomeCategory[]
@@ -186,12 +188,14 @@ export default function IncomesClient({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Gelirler</h1>
-            <p className="text-muted-foreground mt-1">Site gelirlerini yönetin</p>
+            <p className="text-muted-foreground mt-1">Site gelirlerini detaylı olarak yönetin ve takip edin.</p>
           </div>
-          <Button onClick={handleAdd} className="gap-2">
+          <Button onClick={handleAdd} className="gap-2 shadow-sm">
             <Plus className="h-4 w-4" /> Yeni Gelir Ekle
           </Button>
         </div>
+        
+        <Separator />
 
         {/* İstatistik (Backend destekli olması önerilir) */}
          <IncomeStatistic reports={reports} /> 

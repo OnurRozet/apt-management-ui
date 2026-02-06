@@ -16,13 +16,14 @@ import {
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { useState, useTransition } from "react"
-import { registerAction, RegisterInput } from "@/actions/auth-actions"
-import { registerSchema } from "@/schemas/auth"
+import { registerAction } from "@/actions/auth-actions"
+import { registerSchema, RegisterInput } from "@/schemas/auth"
 import { useForm } from "react-hook-form" // ✅ Gerçek import
 import { zodResolver } from "@hookform/resolvers/zod" // ✅ Gerçek import
 import Image from "next/image"
 import SapiensSvg from "../../../public/sapiens.svg"
 import { GalleryVerticalEnd } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 
 
@@ -33,14 +34,15 @@ export function RegisterForm({
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
   const [serverSuccess, setServerSuccess] = useState<string | null>(null);
-
+  const router = useRouter();
+  
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       fullName: "",
-      apartmentNumber: 0,
+      apartmentNumber: "",
       password: "",
-      confirmPassword: "",
+      passwordConfirm: "",
     },
   });
 
@@ -49,6 +51,7 @@ export function RegisterForm({
     setServerSuccess(null);
 
     startTransition(async () => {
+
       const result = await registerAction(values);
 
       if (!result.success) {
@@ -65,6 +68,7 @@ export function RegisterForm({
       }
 
       setServerSuccess(result.message || "Kayıt başarılı.");
+      await router.push("/auth/login");
       form.reset();
     });
   };
@@ -112,12 +116,10 @@ export function RegisterForm({
                   <FieldLabel htmlFor="apartmentNumber">Daire No</FieldLabel>
                   <Input
                     id="apartmentNumber"
-                    type="number"
+                    type="text"
                     placeholder="Daire numaranızı girin"
                     disabled={isPending}
-                    {...form.register("apartmentNumber", {
-                      valueAsNumber: true,
-                    })}
+                    {...form.register("apartmentNumber")}
                     className={errors.apartmentNumber ? "border-red-500" : ""}
                   />
                   {errors.apartmentNumber && (
@@ -149,12 +151,12 @@ export function RegisterForm({
                     type="password"
                     placeholder="Şifrenizi tekrar girin"
                     disabled={isPending}
-                    {...form.register("confirmPassword")}
-                    className={errors.confirmPassword ? "border-red-500" : ""}
+                    {...form.register("passwordConfirm")}
+                    className={errors.passwordConfirm ? "border-red-500" : ""}
                   />
-                  {errors.confirmPassword && (
+                  {errors.passwordConfirm && (
                     <p className="text-xs text-red-500 mt-1">
-                      {errors.confirmPassword.message}
+                      {errors.passwordConfirm.message}
                     </p>
                   )}
                 </Field>

@@ -97,7 +97,7 @@ const ReportClient = ({ summaryCards, monthlyTrends, expenseDistribution }: Repo
 <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Beklenen Aidat Geliri
+              Yıllık Beklenen Aidat Geliri
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
@@ -106,7 +106,7 @@ const ReportClient = ({ summaryCards, monthlyTrends, expenseDistribution }: Repo
               {formatCurrency(summaryCards.expectedIncome)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Bekleyen gelirler
+              Yıl bazında beklenen gelirler
             </p>
           </CardContent>
         </Card>

@@ -11,6 +11,7 @@ import DuesSettingTable from './DuesSettingTable'
 import DuesSettingDeleting from './DuesSettingDeleting'
 import { PaginationState } from '@tanstack/react-table'
 import { toast } from 'sonner'
+import { Separator } from '../ui/separator'
 
 interface DuesSettingsClientProps {
   initialDuesSettings: DuesSetting[]
@@ -136,6 +137,7 @@ export default function DuesSettingsClient({ initialDuesSettings, initialTotalCo
     setIsModalOpen(true)
   }
 
+
   return (
     <>
       <div className="space-y-6">
@@ -144,16 +146,18 @@ export default function DuesSettingsClient({ initialDuesSettings, initialTotalCo
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Aidat Tutarı Belirle</h1>
             <p className="text-muted-foreground mt-1">
-              Aidat tutarlarını yönetin
+              Daire tiplerine göre aidat tutarlarını yönetin.
             </p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={handleAdd} className="gap-2">
+            <Button onClick={handleAdd} className="gap-2 shadow-sm">
               <Plus className="h-4 w-4" />
-              Yeni Aidat Ayarı Ekle
+              Yeni Aidat Tutarı
             </Button>
           </div>
         </div>
+        
+        <Separator />
 
         {/* Aidat Ayarları Listesi */}
         <DuesSettingTable 

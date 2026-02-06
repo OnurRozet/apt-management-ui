@@ -1,65 +1,57 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, Users, Wallet, Activity } from "lucide-react"; // İkonlar
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Building2, Users, Wallet, Activity, CreditCard, DollarSign } from "lucide-react";
+import { Overview } from "@/components/dashboard/overview";
+import { RecentSales } from "@/components/dashboard/recent-sales";
 
 export default function Home() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-        Yönetim Paneli
-      </h1>
-
-      {/* KPI Kartları Alanı - Responsive Grid */}
-      <div className="grid gap-4 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-        
-        {/* Kart 1: Toplam Daire */}
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+      </div>
+      
+      {/* KPI Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Toplam Daire
+              Toplam Gelir
             </CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">48</div>
+            <div className="text-2xl font-bold">₺45,231.89</div>
             <p className="text-xs text-muted-foreground">
-              2 Blok (A - B)
+              +20.1% geçen aydan
             </p>
           </CardContent>
         </Card>
-
-        {/* Kart 2: Doluluk */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Doluluk Oranı
+              Bekleyen Ödemeler
             </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">%92</div>
+            <div className="text-2xl font-bold">+2350</div>
             <p className="text-xs text-muted-foreground">
-              +4% geçen aydan beri
+              +180.1% geçen aydan
             </p>
           </CardContent>
         </Card>
-
-        {/* Kart 3: Bekleyen Aidat */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Bekleyen Aidat
-            </CardTitle>
-            <Wallet className="h-4 w-4 text-red-500" /> {/* Dikkat çeksin diye kırmızı */}
+            <CardTitle className="text-sm font-medium">Daire Doluluğu</CardTitle>
+            <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₺12,450</div>
+            <div className="text-2xl font-bold">%98</div>
             <p className="text-xs text-muted-foreground">
-              8 daire ödeme yapmadı
+              +19% geçen seneden
             </p>
           </CardContent>
         </Card>
-
-        {/* Kart 4: Talepler */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -68,23 +60,37 @@ export default function Home() {
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
+            <div className="text-2xl font-bold">+4</div>
             <p className="text-xs text-muted-foreground">
-              Son 24 saatte +1
+              +2 son bir saatte
             </p>
           </CardContent>
         </Card>
-        
       </div>
 
-      {/* İleride buraya Tablo ve Grafikler gelecek */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <div className="col-span-4 border rounded-md p-4 h-64 flex items-center justify-center bg-slate-50">
-             Grafik Alanı (Yakında)
-          </div>
-          <div className="col-span-3 border rounded-md p-4 h-64 flex items-center justify-center bg-slate-50">
-             Son Aktiviteler (Yakında)
-          </div>
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Genel Bakış</CardTitle>
+            <CardDescription>
+              Bu yılın aylık gelir dağılımı.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <Overview />
+          </CardContent>
+        </Card>
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Son Ödemeler</CardTitle>
+            <CardDescription>
+              Son 24 saatte yapılan 5 işlem.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <RecentSales />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
