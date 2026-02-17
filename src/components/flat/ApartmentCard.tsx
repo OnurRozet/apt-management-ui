@@ -2,7 +2,8 @@
 
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { User, Home, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { User, Home, Wallet, Pencil } from "lucide-react";
 import { Apartment } from "@/types";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { cn } from "@/lib/utils";
@@ -10,9 +11,11 @@ import { cn } from "@/lib/utils";
 interface ApartmentCardProps {
   data: Apartment;
   onClick?: () => void;
+  onUpdateClick?: (e: React.MouseEvent) => void;
+  canUpdate?: boolean;
 }
 
-export default function ApartmentCard({ data, onClick }: ApartmentCardProps) {
+export default function ApartmentCard({ data, onClick, onUpdateClick, canUpdate }: ApartmentCardProps) {
   const isInDebt = data.balance < 0;
   
   // Basit bir mantık: Kiracı adı varsa "Kiracı", yoksa "Ev Sahibi" (Varsayım)
@@ -34,12 +37,27 @@ export default function ApartmentCard({ data, onClick }: ApartmentCardProps) {
           </div>
           <div>
              <h3 className="font-bold text-lg leading-none">{data.label}</h3>
-             {/* <p className="text-xs text-muted-foreground mt-1">Blok A</p> */}
           </div>
         </div>
-        <Badge variant={statusVariant} className="font-normal">
-          {statusLabel}
-        </Badge>
+        <div className="flex items-center gap-2">
+          {canUpdate && onUpdateClick && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-primary hover:bg-primary/10 hover:text-primary shrink-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                onUpdateClick(e);
+              }}
+              title="Daire bilgilerini güncelle"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+          )}
+          <Badge variant={statusVariant} className="font-normal">
+            {statusLabel}
+          </Badge>
+        </div>
       </CardHeader>
       
       <CardContent className="pb-2">

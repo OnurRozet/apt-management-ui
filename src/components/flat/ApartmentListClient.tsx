@@ -2,19 +2,30 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import ApartmentCard from './ApartmentCard'
 import { Apartment } from '@/types'
 import InfoFlatModal from './InfoFlatModal'
+import ApartmentUpdateModal from './ApartmentUpdateModal'
 import { Button } from '@/components/ui/button'
 import { Upload } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
+import { ApartmentService } from '@/services/apartment'
+import { log } from 'console'
 
 interface ApartmentListClientProps {
   apartments: Apartment[]
 }
 
 export default function ApartmentListClient({ apartments }: ApartmentListClientProps) {
+  const router = useRouter()
+  const { user } = useAuth()
+  const isManager = user?.isManager ?? false
+
   const [selectedApartment, setSelectedApartment] = useState<Apartment | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [apartmentToUpdate, setApartmentToUpdate] = useState<Apartment | null>(null)
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
 
   const handleCardClick = (apt: Apartment) => {
     setSelectedApartment(apt)
@@ -27,6 +38,18 @@ export default function ApartmentListClient({ apartments }: ApartmentListClientP
       setSelectedApartment(null)
     }
   }
+
+  const handleUpdateClick = (apt: Apartment) => (e: React.MouseEvent) => {
+    setApartmentToUpdate(apt)
+    setIsUpdateModalOpen(true)
+  }
+
+  const handleUpdateSave = async (apartment: Apartment) => {
+    await ApartmentService.createOrEditApartment(apartment)
+    router.refresh()
+  }
+
+  console.log(apartments)
 
   return (
     <div className="space-y-6">
@@ -51,14 +74,26 @@ export default function ApartmentListClient({ apartments }: ApartmentListClientP
             key={apt.id}
             data={apt}
             onClick={() => handleCardClick(apt)}
+            onUpdateClick={handleUpdateClick(apt)}
+            canUpdate={isManager}
           />
         ))}
       </div>
 
-      <InfoFlatModal 
-        data={selectedApartment || undefined} 
+      <InfoFlatModal
+        data={selectedApartment || undefined}
         open={isModalOpen}
         onOpenChange={handleModalClose}
+      />
+
+      <ApartmentUpdateModal
+        apartment={apartmentToUpdate}
+        open={isUpdateModalOpen}
+        onOpenChange={(open) => {
+          setIsUpdateModalOpen(open)
+          if (!open) setApartmentToUpdate(null)
+        }}
+        onSave={handleUpdateSave}
       />
     </div>
   )
