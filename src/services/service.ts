@@ -5,6 +5,11 @@ import https from "https";
 const BASE_URI: string = process.env.NEXT_PUBLIC_API_BASE_URI ?? "";
 const API_KEY: string = process.env.NEXT_PUBLIC_API_API_KEY ?? "";
 
+// Backend URL'ini logla (sadece server-side'da)
+if (typeof window === "undefined") {
+  console.log(`[SERVICE] Backend Base URI: ${BASE_URI}`);
+}
+
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
@@ -29,11 +34,25 @@ export async function Get<T>(
   isAnonymous?: boolean,
   clientToken?: string,
 ) {
-  return axios.get<T>(BASE_URI + `${endpointUri}`, {
-    headers: getHeaders(isAnonymous, clientToken),
-    params: requestData ? { ...requestData } : undefined,
-    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
-  });
+  const fullUrl = BASE_URI + `${endpointUri}`;
+  console.log(`[GET] İstek gönderiliyor: ${fullUrl}`, { params: requestData });
+  
+  try {
+    const response = await axios.get<T>(fullUrl, {
+      headers: getHeaders(isAnonymous, clientToken),
+      params: requestData ? { ...requestData } : undefined,
+      httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
+    });
+    console.log(`[GET] Başarılı: ${fullUrl}`, { status: response.status });
+    return response;
+  } catch (error: any) {
+    console.error(`[GET] Hata: ${fullUrl}`, { 
+      status: error.response?.status, 
+      message: error.message,
+      data: error.response?.data 
+    });
+    throw error;
+  }
 }
 export async function Put<T>(
   endpointUri: string,
@@ -41,10 +60,24 @@ export async function Put<T>(
   isAnonymous?: boolean,
   clientToken?: string,
 ) {
-  return axios.put<T>(BASE_URI + `${endpointUri}`, requestData, {
-    headers: getHeaders(isAnonymous, clientToken),
-    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
-  });
+  const fullUrl = BASE_URI + `${endpointUri}`;
+  console.log(`[PUT] İstek gönderiliyor: ${fullUrl}`, { data: requestData });
+  
+  try {
+    const response = await axios.put<T>(fullUrl, requestData, {
+      headers: getHeaders(isAnonymous, clientToken),
+      httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
+    });
+    console.log(`[PUT] Başarılı: ${fullUrl}`, { status: response.status });
+    return response;
+  } catch (error: any) {
+    console.error(`[PUT] Hata: ${fullUrl}`, { 
+      status: error.response?.status, 
+      message: error.message,
+      data: error.response?.data 
+    });
+    throw error;
+  }
 }
 export async function Post<T>(
   endpointUri: string,
@@ -52,12 +85,26 @@ export async function Post<T>(
   isAnonymous?: boolean,
   clientToken?: string,
 ) {
-  return axios(BASE_URI + `${endpointUri}`, {
-    method: "POST",
-    data: requestData,
-    headers: getHeaders(isAnonymous, clientToken),
-    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
-  });
+  const fullUrl = BASE_URI + `${endpointUri}`;
+  console.log(`[POST] İstek gönderiliyor: ${fullUrl}`, { data: requestData });
+  
+  try {
+    const response = await axios(BASE_URI + `${endpointUri}`, {
+      method: "POST",
+      data: requestData,
+      headers: getHeaders(isAnonymous, clientToken),
+      httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
+    });
+    console.log(`[POST] Başarılı: ${fullUrl}`, { status: response.status });
+    return response;
+  } catch (error: any) {
+    console.error(`[POST] Hata: ${fullUrl}`, { 
+      status: error.response?.status, 
+      message: error.message,
+      data: error.response?.data 
+    });
+    throw error;
+  }
 }
 
 export async function PostFile<T>(
@@ -66,18 +113,32 @@ export async function PostFile<T>(
   isAnonymous?: boolean,
   clientToken?: string,
 ) {
+  const fullUrl = BASE_URI + `${endpointUri}`;
+  console.log(`[POST FILE] İstek gönderiliyor: ${fullUrl}`, { fileName: file.name, fileSize: file.size });
+  
   const formData = new FormData();
   formData.append("file", file);
 
   const baseHeaders = getHeaders(isAnonymous, clientToken);
 
-  return axios.post<T>(BASE_URI + `${endpointUri}`, formData, {
-    headers: {
-      ...baseHeaders,
-      "Content-Type": "multipart/form-data",
-    },
-    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
-  });
+  try {
+    const response = await axios.post<T>(fullUrl, formData, {
+      headers: {
+        ...baseHeaders,
+        "Content-Type": "multipart/form-data",
+      },
+      httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
+    });
+    console.log(`[POST FILE] Başarılı: ${fullUrl}`, { status: response.status });
+    return response;
+  } catch (error: any) {
+    console.error(`[POST FILE] Hata: ${fullUrl}`, { 
+      status: error.response?.status, 
+      message: error.message,
+      data: error.response?.data 
+    });
+    throw error;
+  }
 }
 export async function Delete<T>(
   endpointUri: string,
@@ -85,11 +146,25 @@ export async function Delete<T>(
   isAnonymous?: boolean,
   clientToken?: string,
 ) {
-  return axios.delete<T>(BASE_URI + `${endpointUri}`, {
-    headers: getHeaders(isAnonymous, clientToken),
-    params: { ...requestData },
-    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
-  });
+  const fullUrl = BASE_URI + `${endpointUri}`;
+  console.log(`[DELETE] İstek gönderiliyor: ${fullUrl}`, { params: requestData });
+  
+  try {
+    const response = await axios.delete<T>(fullUrl, {
+      headers: getHeaders(isAnonymous, clientToken),
+      params: { ...requestData },
+      httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
+    });
+    console.log(`[DELETE] Başarılı: ${fullUrl}`, { status: response.status });
+    return response;
+  } catch (error: any) {
+    console.error(`[DELETE] Hata: ${fullUrl}`, { 
+      status: error.response?.status, 
+      message: error.message,
+      data: error.response?.data 
+    });
+    throw error;
+  }
 }
 
 export async function GetBlob(
@@ -98,10 +173,24 @@ export async function GetBlob(
   isAnonymous?: boolean,
   clientToken?: string,
 ) {
-  return axios.get(BASE_URI + `${endpointUri}`, {
-    headers: getHeaders(isAnonymous, clientToken),
-    params: requestData ? { ...requestData } : undefined,
-    responseType: "blob",
-    httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
-  });
+  const fullUrl = BASE_URI + `${endpointUri}`;
+  console.log(`[GET BLOB] İstek gönderiliyor: ${fullUrl}`, { params: requestData });
+  
+  try {
+    const response = await axios.get(fullUrl, {
+      headers: getHeaders(isAnonymous, clientToken),
+      params: requestData ? { ...requestData } : undefined,
+      responseType: "blob",
+      httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
+    });
+    console.log(`[GET BLOB] Başarılı: ${fullUrl}`, { status: response.status });
+    return response;
+  } catch (error: any) {
+    console.error(`[GET BLOB] Hata: ${fullUrl}`, { 
+      status: error.response?.status, 
+      message: error.message,
+      data: error.response?.data 
+    });
+    throw error;
+  }
 }

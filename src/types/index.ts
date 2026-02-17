@@ -200,6 +200,8 @@ export interface PaymentMatrixDto {
   oct: number;
   nov: number;
   dec: number;
+  /** Backend'den gelen muaf ay numaraları (1-12: Ocak-Aralık). Geçmiş dönem yönetici muafiyetleri. */
+  exemptMonths?: number[];
 }
 
 export interface DashboardSummaryDto {
@@ -283,6 +285,7 @@ export interface ManagementPeriodDto {
   startDate: string;
   endDate: string;
   isExemptFromDues: boolean;
+  isActive?: boolean;
 }
 
 export interface ManagementPeriodSearch extends SearchRequest {

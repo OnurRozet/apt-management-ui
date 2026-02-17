@@ -35,6 +35,7 @@ import {
   Calculator,
   ShieldPlus,
   Shield,
+  WalletCards,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -57,6 +58,7 @@ const iconMap: Record<string, LucideIcon> = {
   UserCog,
   Calculator,
   ShieldPlus,
+  WalletCards
 };
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {

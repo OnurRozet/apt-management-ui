@@ -108,6 +108,16 @@ export function LoginForm({
           <Button disabled={isPending}>
             {isPending ? "Giriş Yapılıyor..." : "Giriş Yap"}
           </Button>
+
+          <p className="text-center text-sm text-muted-foreground">
+            Hesabınız yok mu?{" "}
+            <Link
+              href="/auth/register"
+              className="font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Kayıt olun
+            </Link>
+          </p>
         </div>
       </form>
     </div>

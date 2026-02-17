@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, CardContent } from '../ui/card'
-import { Pencil, Plus, Trash2, Building2 } from 'lucide-react'
+import { Pencil, Plus, Trash2, Building2, Power, PowerOff } from 'lucide-react'
 import { Button } from '../ui/button'
 import { DataTable } from '../table/data-table'
 import { ManagementPeriodDto } from '@/types'
@@ -19,6 +19,7 @@ interface ManagementPeriodTableProps {
   // Actions
   handleAdd: () => void
   handleEdit: (period: ManagementPeriodDto) => void
+  handleToggleStatus: (period: ManagementPeriodDto) => void
   setPeriodToDelete: (period: ManagementPeriodDto) => void
   setDeleteDialogOpen: (open: boolean) => void
 }
@@ -32,6 +33,7 @@ const ManagementPeriodTable: React.FC<ManagementPeriodTableProps> = ({
   onPaginationChange,
   handleAdd,
   handleEdit,
+  handleToggleStatus,
   setPeriodToDelete,
   setDeleteDialogOpen,
 }) => {
@@ -70,6 +72,19 @@ const ManagementPeriodTable: React.FC<ManagementPeriodTableProps> = ({
             actionsHeader="Aksiyonlar"
             renderActions={(period) => (
               <div className="flex justify-end gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleToggleStatus(period)}
+                  title={period.isActive !== false ? 'Pasife al' : 'Aktif yap'}
+                  className={`h-8 w-8 ${
+                    period.isActive !== false
+                      ? 'text-amber-600 hover:text-amber-700 hover:bg-amber-50'
+                      : 'text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50'
+                  }`}
+                >
+                  {period.isActive !== false ? <PowerOff className="h-4 w-4" /> : <Power className="h-4 w-4" />}
+                </Button>
                 <Button
                   variant="ghost"
                   size="icon"

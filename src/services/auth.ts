@@ -41,8 +41,10 @@ export const AuthService = {
     );
   },
   getMe: async (apartmentNumber: string, isAnonymous = false, clientToken?: string) => {
+    // URL'deki özel karakter ve boşluklar için encode (örn: "A Blok - Daire 1")
+    const encoded = encodeURIComponent(apartmentNumber);
     return Get<ServiceResult<UserDto>>(
-      `/auth/get-user-info/${apartmentNumber}`,
+      `/auth/get-user-info/${encoded}`,
       undefined,
       isAnonymous,
       clientToken,

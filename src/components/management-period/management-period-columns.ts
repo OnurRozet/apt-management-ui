@@ -44,5 +44,19 @@ export const managementPeriodColumns: ColumnDef<ManagementPeriodDto>[] = [
       }, isExempt ? 'Evet' : 'Hayır')
     },
   },
+  {
+    accessorKey: "isActive",
+    header: "Durum",
+    cell: ({ row }) => {
+      const isActive = row.original.isActive !== false
+      return React.createElement('span', {
+        className: `px-2 py-1 rounded-full text-xs font-medium ${
+          isActive 
+            ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200' 
+            : 'bg-destructive/15 text-destructive dark:bg-destructive/25 dark:text-destructive'
+        }`
+      }, isActive ? 'Aktif' : 'Pasif')
+    },
+  },
 ]
 

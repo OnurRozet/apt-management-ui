@@ -150,7 +150,26 @@ export default function ManagementPeriodClient({
   const handleAdd = () => {
     setSelectedPeriod(null)
     setIsModalOpen(true)
-  }  
+  }
+
+  const handleToggleStatus = async (period: ManagementPeriodDto) => {
+    const newIsActive = period.isActive !== false ? false : true
+    try {
+      const res = await ManagementPeriodService.createOrEditPeriod({
+        ...period,
+        isActive: newIsActive,
+      })
+      if (res.status === 200 && res.data.isSuccess) {
+        await fetchPeriods()
+        toast.success(newIsActive ? 'Yönetici aktif hale getirildi' : 'Yönetici pasife alındı')
+      } else {
+        toast.error('Durum güncellenemedi.')
+      }
+    } catch (error) {
+      console.error('Durum güncelleme başarısız:', error)
+      toast.error('Durum güncellenemedi. Lütfen tekrar deneyin.')
+    }
+  }
 
   // Apartment bilgilerini column'lara eklemek için columns'ı güncelle
   const columnsWithApartmentInfo = managementPeriodColumns.map(col => {
@@ -201,6 +220,7 @@ export default function ManagementPeriodClient({
           // Actions
           handleAdd={handleAdd}
           handleEdit={handleEdit}
+          handleToggleStatus={handleToggleStatus}
           setPeriodToDelete={setPeriodToDelete}
           setDeleteDialogOpen={setDeleteDialogOpen}
         />

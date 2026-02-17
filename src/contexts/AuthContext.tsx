@@ -26,15 +26,6 @@ interface AuthProviderProps {
   initialUser?: UserDto | null;
 }
 
-// Cookie'den değer okuma helper fonksiyonu
-function getCookie(name: string): string | null {
-  if (typeof document === "undefined") return null;
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
-  return null;
-}
-
 export function AuthProvider({
   children,
   initialUser = null,
@@ -46,24 +37,14 @@ export function AuthProvider({
     try {
       setIsLoading(true);
 
-      // Cookie'den apartmentNumber'ı oku
-      const apartmentNumber = getCookie("apartment_number");
+      // Cookie'ler otomatik gider; token server'da okunur. API route kullan ki backend'e token ile istek atılsın.
+      const res = await fetch("/api/auth/me", { credentials: "include" });
+      const data = await res.json();
 
-      if (!apartmentNumber) {
-        console.log("[AuthContext] apartment_number cookie bulunamadı");
-        setUser(null);
-        return;
-      }
-
-      console.log(
-        "[AuthContext] Kullanıcı bilgileri alınıyor:",
-        apartmentNumber,
-      );
-      const response = await AuthService.getMe(apartmentNumber);
-
-      if (response.data?.isSuccess) {
-        setUser(response.data.resultObject);
+      if (res.ok && data?.user) {
+        setUser(data.user);
       } else {
+        console.log("[AuthContext] Oturum yok veya kullanıcı alınamadı:", data?.message || res.status);
         setUser(null);
       }
     } catch (error) {
