@@ -18,8 +18,14 @@ export async function GET() {
     const response = await AuthService.getMe(apartmentNumber, false, token);
 
     if (response.status !== 200 || !response.data?.isSuccess) {
+      console.warn("[auth/me] Backend yanıtı:", {
+        status: response.status,
+        isSuccess: response.data?.isSuccess,
+        message: response.data?.message,
+        apartmentNumber,
+      });
       return NextResponse.json(
-        { user: null, message: "Kullanıcı bilgileri alınamadı" },
+        { user: null, message: response.data?.message || "Kullanıcı bilgileri alınamadı" },
         { status: 401 },
       );
     }

@@ -1,9 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import ApartmentCard from './ApartmentCard'
 import { Apartment } from '@/types'
 import InfoFlatModal from './InfoFlatModal'
+import { Button } from '@/components/ui/button'
+import { Upload } from 'lucide-react'
 
 interface ApartmentListClientProps {
   apartments: Apartment[]
@@ -34,7 +37,12 @@ export default function ApartmentListClient({ apartments }: ApartmentListClientP
             Sitedeki tüm dairelerin durumunu ve bakiye bilgilerini buradan yönetebilirsiniz.
           </p>
         </div>
-        {/* İleride buraya 'Yeni Daire Ekle' butonu gelebilir */}
+        <Button asChild variant="default">
+          <Link href="/flats/import" className="flex items-center gap-2">
+            <Upload className="h-4 w-4" />
+            Toplu Daire Ekle
+          </Link>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

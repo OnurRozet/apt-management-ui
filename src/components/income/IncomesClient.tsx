@@ -14,6 +14,7 @@ import IncomeTable from './IncomeTable'
 import IncomeDeleting from './IncomeDeleting'
 import { PaginationState } from '@tanstack/react-table'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 import { Separator } from '../ui/separator'
 
@@ -32,6 +33,7 @@ export default function IncomesClient({
   initialTotalCount,
   reports
 }: IncomesClientProps) {
+  const router = useRouter()
   
   // --- STATE YÖNETİMİ ---
   const [incomes, setIncomes] = useState<Income[]>(initialIncomes)
@@ -136,6 +138,7 @@ export default function IncomesClient({
 
         if (res.status === 200 && res.data.isSuccess) {
             await fetchIncomes() // Listeyi yenile
+            router.refresh() // İstatistikler ve sunucu verilerini güncelle
             setIsModalOpen(false)
             setSelectedIncome(null)
             if (selectedIncome) {
@@ -157,6 +160,7 @@ export default function IncomesClient({
       const res = await IncomeService.deleteIncome(incomeToDelete.id)
       if (res.status === 200 && res.data.isSuccess) {
         await fetchIncomes() // Listeyi yenile
+        router.refresh() // İstatistikler ve sunucu verilerini güncelle
         setDeleteDialogOpen(false)
         setIncomeToDelete(null)
         toast.success('Gelir başarıyla silindi')

@@ -236,6 +236,7 @@ export default function DuesTrackingClient({
         <DuesYearlyTable
           data={paymentMatrix}
           managementPeriod={managementPeriods}
+          year={currentYearFromUrl}
         />
       </div>
     </div>

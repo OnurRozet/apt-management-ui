@@ -25,8 +25,7 @@ export default function ExcelUploadCard() {
       if (response.status === 200 && response.data.isSuccess) {
         toast.success("Daireler ve borçlar başarıyla yüklendi!")
         setFile(null)
-        router.refresh();
-        // onUploadSuccess() // Tabloyu yenilemek için
+        router.push('/flats')
       } else {
         toast.error("Yükleme sırasında bir hata oluştu")
       }

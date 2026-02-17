@@ -16,6 +16,7 @@ import { formatCurrency } from "@/lib/formatCurrency";
 interface DuesYearlyTableProps {
   data: PaymentMatrixDto[];
   managementPeriod?: ManagementPeriodDto[];
+  year?: number;
 }
 
 const monthNames = [
@@ -36,7 +37,11 @@ const monthNames = [
 export default function DuesYearlyTable({
   data,
   managementPeriod,
+  year: propYear,
 }: DuesYearlyTableProps) {
+  const year = propYear ?? new Date().getFullYear();
+
+  // Yönetim dönemine göre muaf mı?
   const isDateInManagementRange = (
     monthIndex: number,
     year: number,
@@ -46,15 +51,39 @@ export default function DuesYearlyTable({
     const cellDate = new Date(year, monthIndex, 15);
     return managementPeriod.some((period) => {
       if (period.apartmentId !== apartmentId) return false;
+      if (period.isActive === false) return false;
+      if (!period.isExemptFromDues) return false;
       const start = new Date(period.startDate);
       const end = period.endDate ? new Date(period.endDate) : null;
       return end ? cellDate >= start && cellDate <= end : cellDate >= start;
     });
   };
 
+  const getExemptMonthsFromTracking = (tracking: PaymentMatrixDto): number[] | undefined => {
+    const exempt = tracking.exemptMonths ?? (tracking as { ExemptMonths?: number[] }).ExemptMonths;
+    return exempt?.length ? exempt : undefined;
+  };
+
+  // Muaf ay etiketleri: Backend exemptMonths + management period (geçmiş + gelecek birleşik)
+  const getExemptMonthLabels = (tracking: PaymentMatrixDto) => {
+    const monthIndices = new Set<number>();
+    const exemptMonths = getExemptMonthsFromTracking(tracking);
+    if (exemptMonths?.length) {
+      exemptMonths.forEach((m) => monthIndices.add(m - 1)); // 1-12 -> 0-11
+    }
+    if (managementPeriod?.length) {
+      for (let m = 0; m < 12; m++) {
+        if (isDateInManagementRange(m, year, tracking.apartmentId)) {
+          monthIndices.add(m);
+        }
+      }
+    }
+    return [...monthIndices].sort((a, b) => a - b).map((m) => monthNames[m]);
+  };
+
   const colWidths = {
     apartment: "100px",
-    owner: "150px",
+    owner: "180px",
     summary: "120px",
   };
 
@@ -63,6 +92,7 @@ export default function DuesYearlyTable({
     apartment: "0px",
     owner: "100px",
   };
+
 
   return (
     <div className="overflow-x-auto">
@@ -149,11 +179,8 @@ export default function DuesYearlyTable({
 
               const transferDebt = tracking.transferredDebt || 0;
               const totalPaid = tracking.totalPaid || 0;
-              const remainingDebt =
-                tracking.currentBalance ;
-
-              // Mock management year if needed, usually passed as prop or context
-              const year = new Date().getFullYear();
+              const remainingDebt = tracking.currentBalance;
+              const exemptMonthLabels = getExemptMonthLabels(tracking);
 
               return (
                 <TableRow
@@ -178,7 +205,9 @@ export default function DuesYearlyTable({
                         {tracking.ownerName}
                       </span>
                       {tracking.isManager && (
-                        <ShieldCheck className="h-3 w-3 text-primary shrink-0" />
+                        <span title="Yönetici">
+                          <ShieldCheck className="h-3 w-3 text-primary shrink-0" />
+                        </span>
                       )}
                     </div>
                   </TableCell>
@@ -256,14 +285,10 @@ export default function DuesYearlyTable({
                     )}
                   </TableCell>
 
-                  {/* Aylık Ödemeler */}
+                  {/* Aylık Ödemeler - getExemptMonthLabels ile yönetici muaf ayları gösterilir */}
                   {monthlyAmounts.map((amount, index) => {
                     const isPaid = amount > 0;
-                    const isExempt = isDateInManagementRange(
-                      index,
-                      year,
-                      tracking.apartmentId,
-                    );
+                    const isExempt = exemptMonthLabels.includes(monthNames[index]);
 
                     return (
                       <TableCell
