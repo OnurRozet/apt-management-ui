@@ -44,7 +44,6 @@ async function GetApartments() {
     const res = await ApartmentService.searchApartments({ pageSize: 200, page: 1 });
 
     if (res.status === 200 && res.data?.isSuccess && res.data.resultObject) {
-      console.log(res.data.resultObject.searchResult)
 
       return res.data.resultObject.searchResult;
     }
