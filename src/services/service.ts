@@ -5,10 +5,6 @@ import https from "https";
 const BASE_URI: string = process.env.NEXT_PUBLIC_API_BASE_URI ?? "";
 const API_KEY: string = process.env.NEXT_PUBLIC_API_API_KEY ?? "";
 
-// Backend URL'ini logla (sadece server-side'da)
-if (typeof window === "undefined") {
-  console.log(`[SERVICE] Backend Base URI: ${BASE_URI}`);
-}
 
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
@@ -35,7 +31,6 @@ export async function Get<T>(
   clientToken?: string,
 ) {
   const fullUrl = BASE_URI + `${endpointUri}`;
-  console.log(`[GET] İstek gönderiliyor: ${fullUrl}`, { params: requestData });
   
   try {
     const response = await axios.get<T>(fullUrl, {
@@ -43,14 +38,8 @@ export async function Get<T>(
       params: requestData ? { ...requestData } : undefined,
       httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
     });
-    console.log(`[GET] Başarılı: ${fullUrl}`, { status: response.status });
     return response;
   } catch (error: any) {
-    console.error(`[GET] Hata: ${fullUrl}`, { 
-      status: error.response?.status, 
-      message: error.message,
-      data: error.response?.data 
-    });
     throw error;
   }
 }
@@ -61,21 +50,14 @@ export async function Put<T>(
   clientToken?: string,
 ) {
   const fullUrl = BASE_URI + `${endpointUri}`;
-  console.log(`[PUT] İstek gönderiliyor: ${fullUrl}`, { data: requestData });
   
   try {
     const response = await axios.put<T>(fullUrl, requestData, {
       headers: getHeaders(isAnonymous, clientToken),
       httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
     });
-    console.log(`[PUT] Başarılı: ${fullUrl}`, { status: response.status });
-    return response;
+        return response;
   } catch (error: any) {
-    console.error(`[PUT] Hata: ${fullUrl}`, { 
-      status: error.response?.status, 
-      message: error.message,
-      data: error.response?.data 
-    });
     throw error;
   }
 }
@@ -86,7 +68,6 @@ export async function Post<T>(
   clientToken?: string,
 ) {
   const fullUrl = BASE_URI + `${endpointUri}`;
-  console.log(`[POST] İstek gönderiliyor: ${fullUrl}`, { data: requestData });
   
   try {
     const response = await axios(BASE_URI + `${endpointUri}`, {
@@ -95,14 +76,8 @@ export async function Post<T>(
       headers: getHeaders(isAnonymous, clientToken),
       httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
     });
-    console.log(`[POST] Başarılı: ${fullUrl}`, { status: response.status });
     return response;
   } catch (error: any) {
-    console.error(`[POST] Hata: ${fullUrl}`, { 
-      status: error.response?.status, 
-      message: error.message,
-      data: error.response?.data 
-    });
     throw error;
   }
 }
@@ -114,7 +89,6 @@ export async function PostFile<T>(
   clientToken?: string,
 ) {
   const fullUrl = BASE_URI + `${endpointUri}`;
-  console.log(`[POST FILE] İstek gönderiliyor: ${fullUrl}`, { fileName: file.name, fileSize: file.size });
   
   const formData = new FormData();
   formData.append("file", file);
@@ -129,14 +103,8 @@ export async function PostFile<T>(
       },
       httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
     });
-    console.log(`[POST FILE] Başarılı: ${fullUrl}`, { status: response.status });
     return response;
   } catch (error: any) {
-    console.error(`[POST FILE] Hata: ${fullUrl}`, { 
-      status: error.response?.status, 
-      message: error.message,
-      data: error.response?.data 
-    });
     throw error;
   }
 }
@@ -147,7 +115,6 @@ export async function Delete<T>(
   clientToken?: string,
 ) {
   const fullUrl = BASE_URI + `${endpointUri}`;
-  console.log(`[DELETE] İstek gönderiliyor: ${fullUrl}`, { params: requestData });
   
   try {
     const response = await axios.delete<T>(fullUrl, {
@@ -155,14 +122,8 @@ export async function Delete<T>(
       params: { ...requestData },
       httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
     });
-    console.log(`[DELETE] Başarılı: ${fullUrl}`, { status: response.status });
     return response;
   } catch (error: any) {
-    console.error(`[DELETE] Hata: ${fullUrl}`, { 
-      status: error.response?.status, 
-      message: error.message,
-      data: error.response?.data 
-    });
     throw error;
   }
 }
@@ -174,7 +135,6 @@ export async function GetBlob(
   clientToken?: string,
 ) {
   const fullUrl = BASE_URI + `${endpointUri}`;
-  console.log(`[GET BLOB] İstek gönderiliyor: ${fullUrl}`, { params: requestData });
   
   try {
     const response = await axios.get(fullUrl, {
@@ -183,14 +143,8 @@ export async function GetBlob(
       responseType: "blob",
       httpsAgent: typeof window === "undefined" ? httpsAgent : undefined,
     });
-    console.log(`[GET BLOB] Başarılı: ${fullUrl}`, { status: response.status });
     return response;
   } catch (error: any) {
-    console.error(`[GET BLOB] Hata: ${fullUrl}`, { 
-      status: error.response?.status, 
-      message: error.message,
-      data: error.response?.data 
-    });
     throw error;
   }
 }
